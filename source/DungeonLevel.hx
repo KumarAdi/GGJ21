@@ -233,7 +233,10 @@ class DungeonLevel extends TiledMap
 					collidableTileLayers = new Array<FlxTilemap>();
 
 				foregroundTiles.add(tilemap);
-				collidableTileLayers.push(tilemap);
+				if (!tileLayer.properties.contains("above"))
+				{
+					collidableTileLayers.push(tilemap);
+				}
 			}
 		}
 	}
