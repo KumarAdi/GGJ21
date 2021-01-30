@@ -6,10 +6,6 @@
  <tileset firstgid="1" name="dungeon.v1" tilewidth="16" tileheight="16" tilecount="256" columns="16">
   <image source="dungeon.v1.png" width="256" height="256"/>
  </tileset>
- <tileset firstgid="257" name="gZ3c5" tilewidth="16" tileheight="16" tilecount="256" columns="16">
-  <grid orientation="orthogonal" width="16" height="128"/>
-  <image source="../../../../Downloads/gZ3c5.png" width="256" height="256"/>
- </tileset>
  <layer id="1" name="bg" width="48" height="31">
   <properties>
    <property name="nocollide" type="bool" value="true"/>
