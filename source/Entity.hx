@@ -1,30 +1,55 @@
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
 import flixel.system.FlxAssets.FlxGraphicAsset;
+import flixel.ui.FlxBar;
 
-class PlayerEntity extends FlxSprite
+class Entity extends FlxSprite
 {
-	static inline var SPEED:Float = 80;
+	public var speed:Float;
+	public var maxHealth:Int;
 
-	public function new(X:Float = 0, Y:Float = 0, asset:FlxGraphicAsset)
+	public function new(X:Float = 0, Y:Float = 0, asset:FlxGraphicAsset, group:FlxGroup, speed:Float = 80, maxHealth:Int = 10)
 	{
 		super(X, Y);
+		this.speed = speed;
+		this.maxHealth = maxHealth;
 
 		loadGraphic(asset, true, 16, 16);
 
 		setFacingFlip(FlxObject.LEFT, false, false);
 		setFacingFlip(FlxObject.RIGHT, true, false);
 
-		maxVelocity.x = SPEED;
-		maxVelocity.y = SPEED;
+		maxVelocity.x = speed;
+		maxVelocity.y = speed;
 		drag.x = maxVelocity.x * 4;
 		drag.y = maxVelocity.y * 4;
 
 		animation.add("lr", [3, 4, 3, 5], 6, false);
 		animation.add("u", [6, 7, 6, 8], 6, false);
 		animation.add("d", [0, 1, 0, 2], 6, false);
+
+		health = 100;
+
+		var bar = new FlxBar(0, 0, LEFT_TO_RIGHT, 20, 4);
+		bar.percent = 100;
+		bar.setParent(this, "health", true, -2, -6);
+		group.add(bar);
+	}
+
+	public function damage(amount:Int)
+	{
+		health -= (100 / maxHealth) * amount;
+	}
+}
+
+class PlayerEntity extends Entity
+{
+	public function new(X:Float = 0, Y:Float = 0, asset:FlxGraphicAsset, group:FlxGroup)
+	{
+		super(X, Y, asset, group, 80, 10);
 	}
 
 	override function update(elapsed:Float)
@@ -83,7 +108,7 @@ class PlayerEntity extends FlxSprite
 			}
 
 			// determine our velocity based on angle and speed
-			velocity.set(SPEED, 0);
+			velocity.set(speed, 0);
 			velocity.rotate(FlxPoint.weak(0, 0), newAngle);
 
 			// if the player is moving (velocity is not 0 for either axis), we need to change the animation to match their facing

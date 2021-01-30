@@ -4,13 +4,12 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.ui.FlxBar;
 import flixel.util.FlxSort;
 
 class PlayState extends FlxState
 {
 	public var level:DungeonLevel;
-
-	public var player:FlxSprite;
 
 	override public function create()
 	{
@@ -29,6 +28,9 @@ class PlayState extends FlxState
 
 		// Add foreground tiles after adding level objects, so these tiles render on top of player
 		add(level.foregroundTiles);
+
+		// Load Entity info display like health bars
+		add(level.entitiesInfoLayer);
 	}
 
 	override public function update(elapsed:Float)

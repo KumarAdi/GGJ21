@@ -25,6 +25,7 @@ class DungeonLevel extends TiledMap
 	inline static var c_PATH_LEVEL_TILESHEETS = "assets/tiled/";
 
 	public var foregroundTiles:FlxGroup;
+	public var entitiesInfoLayer:FlxGroup;
 	public var trapsLayer:FlxSpriteGroup;
 	public var entitiesLayer:FlxSpriteGroup;
 	public var backgroundLayer:FlxGroup;
@@ -38,6 +39,7 @@ class DungeonLevel extends TiledMap
 		super(tiledLevel);
 
 		foregroundTiles = new FlxGroup();
+		entitiesInfoLayer = new FlxGroup();
 		trapsLayer = new FlxSpriteGroup();
 		entitiesLayer = new FlxSpriteGroup();
 		backgroundLayer = new FlxGroup();
@@ -87,7 +89,7 @@ class DungeonLevel extends TiledMap
 		switch (o.type.toLowerCase())
 		{
 			case "player_start":
-				this.player = new PlayerEntity(x, y, AssetPaths.player__png);
+				this.player = new PlayerEntity(x, y, AssetPaths.player__png, entitiesInfoLayer);
 				FlxG.camera.follow(player);
 				entitiesLayer.add(player);
 
