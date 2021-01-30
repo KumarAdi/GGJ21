@@ -1,5 +1,6 @@
 package;
 
+import Entity.PlayerEntity;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
@@ -15,7 +16,6 @@ import flixel.addons.editors.tiled.TiledTileSet;
 import flixel.addons.tile.FlxTileSpecial;
 import flixel.addons.tile.FlxTilemapExt;
 import flixel.group.FlxGroup;
-import flixel.tile.FlxTile;
 import flixel.tile.FlxTilemap;
 import haxe.io.Path;
 
@@ -142,12 +142,11 @@ class DungeonLevel extends TiledMap
 		switch (o.type.toLowerCase())
 		{
 			case "player_start":
-				var player = new FlxSprite(x, y);
-				player.makeGraphic(16, 16, 0xffaa1111);
-				player.maxVelocity.x = 80;
-				player.maxVelocity.y = 80;
-				player.drag.x = player.maxVelocity.x * 4;
-				player.drag.y = player.maxVelocity.y * 4;
+				var player = new PlayerEntity(x, y, AssetPaths.player__png);
+				// player.maxVelocity.x = 80;
+				// player.maxVelocity.y = 80;
+				// player.drag.x = player.maxVelocity.x * 4;
+				// player.drag.y = player.maxVelocity.y * 4;
 				FlxG.camera.follow(player);
 				state.player = player;
 				group.add(player);

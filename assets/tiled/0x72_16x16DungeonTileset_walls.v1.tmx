@@ -6,7 +6,7 @@
  <tileset firstgid="1" name="dungeon.v1" tilewidth="16" tileheight="16" tilecount="256" columns="16">
   <image source="dungeon.v1.png" width="256" height="256"/>
  </tileset>
- <layer id="1" name="bg" width="48" height="31" visible="0">
+ <layer id="1" name="bg" width="48" height="31">
   <properties>
    <property name="nocollide" type="bool" value="true"/>
    <property name="tileset" value="dungeon.v1"/>
@@ -45,7 +45,7 @@
 130,130,130,130,130,130,130,130,130,130,130,130,130,130,130,130,130,130,130,130,130,130,130,130,130,130,130,130,130,130,130,130,130,130,130,130,130,130,130,130,130,130,130,130,130,130,130,130
 </data>
  </layer>
- <layer id="2" name="bg2" width="48" height="31" visible="0">
+ <layer id="2" name="bg2" width="48" height="31">
   <properties>
    <property name="nocollide" type="bool" value="true"/>
    <property name="tileset" value="dungeon.v1"/>
@@ -84,7 +84,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer id="3" name="floor" width="48" height="31" visible="0">
+ <layer id="3" name="floor" width="48" height="31">
   <properties>
    <property name="nocollide" type="bool" value="true"/>
    <property name="tileset" value="dungeon.v1"/>
@@ -123,7 +123,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="5" name="objects" visible="0">
+ <objectgroup id="5" name="objects">
   <object id="2" type="player_start" x="119.5" y="136">
    <point/>
   </object>
