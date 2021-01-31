@@ -16,7 +16,8 @@ enum TriggerEntity
 
 class PressurePlate extends FlxEffectSprite
 {
-	private var trap:ITrap;
+	private var trapName:String;
+	private var trapMap:Map<String, ITrap>;
 
 	public var sprite:FlxExtendedSprite;
 
@@ -24,7 +25,7 @@ class PressurePlate extends FlxEffectSprite
 
 	private var entities:Array<TriggerEntity>;
 
-	public function new(x:Int, y:Int, trap:ITrap)
+	public function new(x:Int, y:Int, trapName:String, trapMap:Map<String, ITrap>)
 	{
 		this.outlineEffect = new FlxOutlineEffect();
 		this.sprite = new FlxExtendedSprite(x, y);
@@ -37,7 +38,8 @@ class PressurePlate extends FlxEffectSprite
 		this.sprite.animation.play("normal");
 
 		this.entities = [];
-		this.trap = trap;
+		this.trapName = trapName;
+		this.trapMap = trapMap;
 
 		// I don't know why this is necessary
 		this.x = x;
@@ -49,7 +51,7 @@ class PressurePlate extends FlxEffectSprite
 		if (this.entities.length == 0)
 		{
 			this.animation.play((event == Pressed) ? "pressed" : "normal", true);
-			this.trap.triggerEvent(event);
+			this.trapMap[trapName].triggerEvent(event);
 		}
 	}
 
