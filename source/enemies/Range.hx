@@ -28,7 +28,7 @@ class RangeEntity extends EnemyEntity
 		attackRange = 300;
 
 		// TODO replace with the real animation
-		loadGraphic(AssetPaths.pharaoh__png, true, 60, 90);
+		loadGraphic(AssetPaths.scorpion__png, true, 60, 90);
 
 		setFacingFlip(FlxObject.LEFT, false, false);
 		setFacingFlip(FlxObject.RIGHT, true, false);
