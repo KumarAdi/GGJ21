@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="right-down" width="48" height="31" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="9">
+<map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="right-down" width="48" height="31" tilewidth="16" tileheight="16" infinite="0" nextlayerid="13" nextobjectid="11">
  <properties>
   <property name="tilemap" value="dungeon.v1"/>
  </properties>
@@ -127,9 +127,22 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup id="11" name="trap_triggers">
+  <object id="10" type="floor_trap" x="96" y="352" width="16" height="16">
+   <properties>
+    <property name="trap_name" value="boulder1"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="12" name="traps">
+  <object id="9" name="boulder1" type="boulder_trap" x="128" y="352" width="16" height="16">
+   <properties>
+    <property name="direction" value="left"/>
+   </properties>
+  </object>
+ </objectgroup>
  <objectgroup id="4" name="objects">
   <object id="2" type="player_start" x="112" y="112" width="16" height="16"/>
-  <object id="8" type="floor_trap" gid="515" x="96" y="368" width="16" height="16"/>
  </objectgroup>
  <layer id="5" name="walls" width="48" height="31">
   <properties>

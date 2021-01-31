@@ -28,6 +28,8 @@ class PlayState extends FlxState
 		// Load trap objects
 		add(level.trapsLayer);
 
+		add(level.triggerLayer);
+
 		// Load player & enemy objects
 		add(level.entitiesLayer);
 
@@ -38,23 +40,30 @@ class PlayState extends FlxState
 		add(level.entitiesInfoLayer);
 
 		// things that can damage the player
-		add(level.damageLayer);
+		add(level.boulderLayer);
 	}
 
 	override public function update(elapsed:Float)
 	{
 		super.update(elapsed);
 		level.collideWithLevel(level.player);
-		FlxG.overlap(level.trapsLayer, level.player, null, (trap, player) ->
+
+		FlxG.overlap(level.triggerLayer, level.entitiesLayer, null, (trigger, entity) ->
 		{
-			trap.addEntity(level.entitiesLayer);
+			trigger.addEntity(entity);
 			return false;
 		});
 
-		FlxG.overlap(level.damageLayer, level.entitiesLayer, null, (damager, damagee) ->
+		FlxG.overlap(level.boulderLayer, level.entitiesLayer, null, (boulder, entity) ->
 		{
-			damagee.damage(damager.health);
+			entity.damage(boulder.health);
+			boulder.kill();
 			return false;
 		});
+
+		level.boulderLayer.forEachAlive((b) -> level.collideWithLevel(b, (level, boulder) ->
+		{
+			boulder.kill();
+		}));
 	}
 }

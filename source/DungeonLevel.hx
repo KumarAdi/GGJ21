@@ -3,9 +3,6 @@ package;
 import Entity.PlayerEntity;
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.FlxSprite;
-import flixel.addons.editors.tiled.TiledImageTile;
-import flixel.addons.editors.tiled.TiledLayer.TiledLayerType;
 import flixel.addons.editors.tiled.TiledLayer;
 import flixel.addons.editors.tiled.TiledMap;
 import flixel.addons.editors.tiled.TiledObject;
@@ -19,7 +16,8 @@ import flixel.group.FlxGroup;
 import flixel.group.FlxSpriteGroup;
 import flixel.tile.FlxTilemap;
 import haxe.io.Path;
-import traps.ExplosiveTrap;
+import traps.BoulderTrap;
+import traps.ITrap;
 import traps.PressurePlate;
 
 class DungeonLevel extends TiledMap
@@ -28,10 +26,13 @@ class DungeonLevel extends TiledMap
 
 	public var foregroundTiles:FlxGroup;
 	public var entitiesInfoLayer:FlxGroup;
-	public var trapsLayer:FlxSpriteGroup;
+	public var triggerLayer:FlxSpriteGroup;
+	public var trapsLayer:FlxGroup;
 	public var entitiesLayer:FlxSpriteGroup;
 	public var backgroundLayer:FlxGroup;
-	public var damageLayer:FlxGroup;
+	public var boulderLayer:FlxSpriteGroup;
+
+	private var trapMap:Map<String, ITrap>;
 
 	public var player:PlayerEntity;
 
@@ -43,12 +44,15 @@ class DungeonLevel extends TiledMap
 
 		foregroundTiles = new FlxGroup();
 		entitiesInfoLayer = new FlxGroup();
-		trapsLayer = new FlxSpriteGroup();
+		triggerLayer = new FlxSpriteGroup();
+		trapsLayer = new FlxGroup();
 		entitiesLayer = new FlxSpriteGroup();
 		backgroundLayer = new FlxGroup();
-		damageLayer = new FlxGroup();
+		boulderLayer = new FlxSpriteGroup();
 
+		this.trapMap = new Map();
 		FlxG.camera.setScrollBoundsRect(0, 0, fullWidth, fullHeight, true);
+
 		FlxG.camera.zoom = 3;
 
 		loadData();
@@ -98,8 +102,13 @@ class DungeonLevel extends TiledMap
 				entitiesLayer.add(player);
 
 			case "floor_trap":
-				var trap = new PressurePlate(x, y, new ExplosiveTrap(x, y, damageLayer));
+				var trap = new PressurePlate(x, y, "boulder1", trapMap);
+				triggerLayer.add(trap);
+
+			case "boulder_trap":
+				var trap = new BoulderTrap(x, y, boulderLayer, o.properties.get("direction"));
 				trapsLayer.add(trap);
+				trapMap.set(o.name, trap);
 		}
 	}
 
