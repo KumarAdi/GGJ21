@@ -9,12 +9,14 @@ import flixel.tile.FlxTilemap;
 import flixel.tweens.FlxTween;
 import flixel.tweens.motion.LinearPath;
 import flixel.ui.FlxBar;
+import haxe.Timer;
 
 class Entity extends FlxSprite
 {
 	public var speed:Float;
 	public var maxHealth:Int;
 	public var level:DungeonLevel;
+	public var invulnerable:Bool;
 
 	public function new(X:Float = 0, Y:Float = 0, asset:FlxGraphicAsset, level:DungeonLevel, speed:Float = 80, maxHealth:Int = 10)
 	{
@@ -22,8 +24,9 @@ class Entity extends FlxSprite
 		this.speed = speed;
 		this.maxHealth = maxHealth;
 		this.level = level;
+		this.invulnerable = false;
 
-		loadGraphic(asset, true, 16, 16);
+		loadGraphic(asset, true, 60, 90);
 
 		setFacingFlip(FlxObject.LEFT, false, false);
 		setFacingFlip(FlxObject.RIGHT, true, false);
@@ -33,9 +36,9 @@ class Entity extends FlxSprite
 		drag.x = maxVelocity.x * 4;
 		drag.y = maxVelocity.y * 4;
 
-		animation.add("lr", [3, 4, 3, 5], 6, false);
-		animation.add("u", [6, 7, 6, 8], 6, false);
-		animation.add("d", [0, 1, 0, 2], 6, false);
+		animation.add("lr", [for (x in 10...18) x], 6, false);
+		animation.add("u", [for (x in 10...18) x], 6, false);
+		animation.add("d", [for (x in 10...18) x], 6, false);
 
 		health = 100;
 
@@ -47,7 +50,12 @@ class Entity extends FlxSprite
 
 	public function damage(amount:Int)
 	{
-		health -= (100 / maxHealth) * amount;
+		if (!invulnerable)
+		{
+			health -= (100 / maxHealth) * amount;
+			invulnerable = true;
+			Timer.delay(() -> invulnerable = false, 500);
+		}
 	}
 }
 

@@ -6,9 +6,6 @@ import enemies.Range.RangeEntity;
 import enemies.Test.TestEnemy;
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.FlxSprite;
-import flixel.addons.editors.tiled.TiledImageTile;
-import flixel.addons.editors.tiled.TiledLayer.TiledLayerType;
 import flixel.addons.editors.tiled.TiledLayer;
 import flixel.addons.editors.tiled.TiledMap;
 import flixel.addons.editors.tiled.TiledObject;
@@ -21,7 +18,11 @@ import flixel.addons.tile.FlxTilemapExt;
 import flixel.group.FlxGroup;
 import flixel.group.FlxSpriteGroup;
 import flixel.tile.FlxTilemap;
+import haxe.ds.IntMap;
 import haxe.io.Path;
+import traps.BoulderTrap;
+import traps.ITrap;
+import traps.PressurePlate;
 
 class DungeonLevel extends TiledMap
 {
@@ -29,9 +30,13 @@ class DungeonLevel extends TiledMap
 
 	public var foregroundTiles:FlxGroup;
 	public var entitiesInfoLayer:FlxGroup;
-	public var trapsLayer:FlxSpriteGroup;
+	public var triggerLayer:FlxSpriteGroup;
+	public var trapsLayer:FlxGroup;
 	public var entitiesLayer:FlxSpriteGroup;
 	public var backgroundLayer:FlxGroup;
+	public var boulderLayer:FlxSpriteGroup;
+
+	private var trapMap:Map<String, ITrap>;
 
 	public var player:PlayerEntity;
 
@@ -44,12 +49,14 @@ class DungeonLevel extends TiledMap
 
 		foregroundTiles = new FlxGroup();
 		entitiesInfoLayer = new FlxGroup();
-		trapsLayer = new FlxSpriteGroup();
+		triggerLayer = new FlxSpriteGroup();
+		trapsLayer = new FlxGroup();
 		entitiesLayer = new FlxSpriteGroup();
 		backgroundLayer = new FlxGroup();
+		boulderLayer = new FlxSpriteGroup();
 
+		this.trapMap = new Map();
 		FlxG.camera.setScrollBoundsRect(0, 0, fullWidth, fullHeight, true);
-		FlxG.camera.zoom = 3;
 
 		loadData();
 	}
@@ -98,12 +105,13 @@ class DungeonLevel extends TiledMap
 				entitiesLayer.add(player);
 
 			case "floor_trap":
-				var trap = new FlxSprite(x, y);
-				trap.loadGraphic("assets/tiled/tile_placeholder.png", true, 16, 16);
-				trap.animation.add("normal", [3], 60, false);
-				trap.animation.add("pressed", [2], 60, false);
-				trap.animation.play("normal");
+				var trap = new PressurePlate(x, y, o.properties.get("trap"), trapMap);
+				triggerLayer.add(trap);
+
+			case "boulder_trap":
+				var trap = new BoulderTrap(x, y, boulderLayer, o.properties.get("direction"));
 				trapsLayer.add(trap);
+        trapMap.set(o.name, trap);
 
 			case "enemy_spawn":
 				switch (o.properties.get("type"))
@@ -147,6 +155,7 @@ class DungeonLevel extends TiledMap
 
 		// could be a regular FlxTilemap if there are no animated tiles
 		var tilemap = new FlxTilemapExt();
+
 		tilemap.loadMapFromArray(tileLayer.tileArray, width, height, processedPath, tileSet.tileWidth, tileSet.tileHeight, OFF, tileSet.firstGID, 1, 1);
 
 		if (tileLayer.properties.contains("pathing"))

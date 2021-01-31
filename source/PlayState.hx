@@ -1,11 +1,8 @@
 package;
 
 import flixel.FlxG;
-import flixel.FlxObject;
-import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.ui.FlxBar;
-import flixel.util.FlxSort;
+import flixel.addons.plugin.FlxMouseControl;
 
 class PlayState extends FlxState
 {
@@ -14,14 +11,19 @@ class PlayState extends FlxState
 	override public function create()
 	{
 		super.create();
+		FlxG.debugger.visible = true;
 
-		level = new DungeonLevel("assets/tiled/0x72_16x16DungeonTileset_walls.v1.tmx");
+		FlxG.plugins.add(new FlxMouseControl());
+
+		level = new DungeonLevel("assets/tiled/test_map.tmx");
 
 		// Add backgrounds
 		add(level.backgroundLayer);
 
 		// Load trap objects
 		add(level.trapsLayer);
+
+		add(level.triggerLayer);
 
 		// Load player & enemy objects
 		add(level.entitiesLayer);
@@ -31,24 +33,32 @@ class PlayState extends FlxState
 
 		// Load Entity info display like health bars
 		add(level.entitiesInfoLayer);
+
+		// things that can damage the player
+		add(level.boulderLayer);
 	}
 
 	override public function update(elapsed:Float)
 	{
 		super.update(elapsed);
 		level.collideWithLevel(level.player);
-		FlxG.overlap(level.trapsLayer, level.player, null, (trap, player) ->
+
+		FlxG.overlap(level.triggerLayer, level.entitiesLayer, null, (trigger, entity) ->
 		{
-			var trapSprite:FlxSprite = cast trap;
-			trapSprite.animation.play("pressed", true);
-			trapSprite.animation.finishCallback = (name) ->
-			{
-				if (FlxG.overlap(trapSprite, player))
-					return;
-				trapSprite.animation.play("normal");
-				trapSprite.animation.finishCallback = null;
-			};
+			trigger.addEntity(entity);
 			return false;
 		});
+
+		FlxG.overlap(level.boulderLayer, level.entitiesLayer, null, (boulder, entity) ->
+		{
+			entity.damage(boulder.health);
+			boulder.kill();
+			return false;
+		});
+
+		level.boulderLayer.forEachAlive((b) -> level.collideWithLevel(b, (level, boulder) ->
+		{
+			boulder.kill();
+		}));
 	}
 }
