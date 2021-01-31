@@ -1,104 +1,93 @@
 package enemies;
 
+import Entity.EnemyEntity;
+import Entity.EnemyMode;
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.FlxSprite;
 import flixel.math.FlxPoint;
-import flixel.math.FlxVelocity;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.tile.FlxTilemap;
 import flixel.tweens.FlxTween;
 import flixel.tweens.motion.LinearPath;
-import openfl.display.Sprite;
 
-class RangeEntity extends Entity
+class RangeEntity extends EnemyEntity
 {
 	var oldFacing:Int;
-	var pathing:FlxTilemap;
-	var visionRange:Float = 150;
-	var attackRange:Float = 100;
-	var attackDamage:Int = 1;
-	var attackProjectileSpeed:Float = 100;
-	var attackCooldown:Float = 1;
-	var attackCountdown:Float = 1;
 	var currentPath:LinearPath;
-	var currentDest:FlxPoint;
 
-	public function new(X:Float = 0, Y:Float = 0, asset:FlxGraphicAsset, level:DungeonLevel)
+	public function new(X:Float = 0, Y:Float = 0, level:DungeonLevel)
 	{
-		super(X, Y, asset, level, 40, 4);
+		super(X, Y, level, 40, 4);
 		oldFacing = facing;
+		pathingKey = "avoidRange";
+		visionRange = 150;
+		attackRange = 100;
+
+		// TODO replace with the real animation
+		loadGraphic(AssetPaths.pharaoh__png, true, 60, 90);
+
+		setFacingFlip(FlxObject.LEFT, false, false);
+		setFacingFlip(FlxObject.RIGHT, true, false);
+
+		maxVelocity.x = speed;
+		maxVelocity.y = speed;
+		drag.x = maxVelocity.x * 4;
+		drag.y = maxVelocity.y * 4;
+
+		animation.add("lr", [for (x in 10...18) x], 10, false);
+		animation.add("u", [for (x in 10...18) x], 10, false);
+		animation.add("d", [for (x in 10...18) x], 10, false);
+		animation.add("idle", [for (x in 0...8) x], 10, true);
 	}
 
 	override function update(elapsed:Float)
 	{
-		if (pathing == null)
-			if (level.pathing.exists("avoidRange"))
-				pathing = level.pathing["avoidRange"];
-
-		if (facing != oldFacing)
-		{
-			switch (facing)
-			{
-				case FlxObject.LEFT, FlxObject.RIGHT:
-					animation.play("lr");
-				case FlxObject.UP:
-					animation.play("u");
-				case FlxObject.DOWN:
-					animation.play("d");
-			}
-			oldFacing = facing;
-		}
-
-		if (attackCountdown > 0)
-		{
-			attackCountdown -= elapsed;
-		}
-
-		findAndAttackPlayer();
 		super.update(elapsed);
+		switch (mode)
+		{
+			case EnemyMode.Idle:
+				idle();
+			case EnemyMode.MovingTowards(pos, changed):
+				if (pathing != null)
+					moveTowards(pos, changed);
+			case EnemyMode.Attacking:
+				attack();
+		}
 	}
 
-	function findAndAttackPlayer()
+	function idle()
 	{
-		var myPos = new FlxPoint(x, y);
-		var playerPos = new FlxPoint(level.player.x, level.player.y);
-		var distance = playerPos.distanceTo(myPos);
+		clearCurrentPath();
+	}
 
-		if (currentDest == null)
-			currentDest = playerPos;
-
-		if (distance <= visionRange && level.collidableTileLayers[0].ray(myPos, playerPos))
+	function moveTowards(pos:FlxPoint, changed:Bool)
+	{
+		if (changed)
 		{
-			if (distance <= attackRange)
+			clearCurrentPath();
+
+			var path = pathing.findPath(getPosition(), pos);
+			if (path != null && path.length > 1)
 			{
-				if (attackCountdown < 0)
-				{
-					// TODO: do attack animation
-					var projectile = new FlxSprite(16, 16);
-					projectile.makeGraphic(16, 16, 0xFF0000);
-					// FlxVelocity.moveTowardsPoint(this, playerPos);
-					FlxG.state.add(projectile);
-					// level.player.damage(attackDamage);
-					attackCountdown = attackCooldown;
-				}
-			}
-			if (currentPath == null || currentPath.finished || !currentDest.equals(playerPos))
-			{
-				if (currentPath != null && !currentPath.finished && !currentDest.equals(playerPos))
-				{
-					currentPath.cancelChain();
-				}
-				var path = pathing.findPath(myPos, playerPos);
-				trace(path);
-				if (path != null && path.length > 1)
-				{
-					currentPath = FlxTween.linearPath(this, path, speed, false);
-					currentDest = playerPos;
-				}
+				currentPath = FlxTween.linearPath(this, path, speed, false);
 			}
 		}
-		else if (currentPath != null && !currentPath.finished)
+	}
+
+	function attack()
+	{
+		clearCurrentPath();
+		if (attackCountdown <= 0)
+		{
+			// TODO: play the animation
+			level.player.damage(attackDamage);
+			attackCountdown = attackCooldown;
+		}
+	}
+
+	function clearCurrentPath()
+	{
+		if (currentPath != null && !currentPath.finished)
 		{
 			currentPath.cancelChain();
 		}

@@ -3,7 +3,6 @@ package;
 import Entity.PlayerEntity;
 import enemies.Melee.MeleeEntity;
 import enemies.Range.RangeEntity;
-import enemies.Test.TestEnemy;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.addons.editors.tiled.TiledLayer;
@@ -112,15 +111,14 @@ class DungeonLevel extends TiledMap
 				var trap = new BoulderTrap(x, y, boulderLayer, o.properties.get("direction"));
 				trapsLayer.add(trap);
 				trapMap.set(o.name, trap);
+
 			case "enemy_spawn":
 				switch (o.properties.get("type"))
 				{
 					case "melee":
-						entitiesLayer.add(new MeleeEntity(x, y, AssetPaths.player__png, this));
+						entitiesLayer.add(new MeleeEntity(x, y, this));
 					case "range":
-						entitiesLayer.add(new RangeEntity(x, y, AssetPaths.player__png, this));
-					case "test":
-						// entitiesLayer.add(new TestEnemy(x, y, AssetPaths.player__png, this));
+						entitiesLayer.add(new RangeEntity(x, y, this));
 				}
 		}
 	}
