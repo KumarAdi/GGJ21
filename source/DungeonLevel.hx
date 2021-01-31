@@ -31,6 +31,7 @@ class DungeonLevel extends TiledMap
 	public var trapsLayer:FlxSpriteGroup;
 	public var entitiesLayer:FlxSpriteGroup;
 	public var backgroundLayer:FlxGroup;
+	public var damageLayer:FlxGroup;
 
 	public var player:PlayerEntity;
 
@@ -45,6 +46,7 @@ class DungeonLevel extends TiledMap
 		trapsLayer = new FlxSpriteGroup();
 		entitiesLayer = new FlxSpriteGroup();
 		backgroundLayer = new FlxGroup();
+		damageLayer = new FlxGroup();
 
 		FlxG.camera.setScrollBoundsRect(0, 0, fullWidth, fullHeight, true);
 		FlxG.camera.zoom = 3;
@@ -96,7 +98,7 @@ class DungeonLevel extends TiledMap
 				entitiesLayer.add(player);
 
 			case "floor_trap":
-				var trap = new PressurePlate(x, y, new ExplosiveTrap(x, y, foregroundTiles));
+				var trap = new PressurePlate(x, y, new ExplosiveTrap(x, y, damageLayer));
 				trapsLayer.add(trap);
 		}
 	}

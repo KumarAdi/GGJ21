@@ -36,6 +36,9 @@ class PlayState extends FlxState
 
 		// Load Entity info display like health bars
 		add(level.entitiesInfoLayer);
+
+		// things that can damage the player
+		add(level.damageLayer);
 	}
 
 	override public function update(elapsed:Float)
@@ -45,6 +48,12 @@ class PlayState extends FlxState
 		FlxG.overlap(level.trapsLayer, level.player, null, (trap, player) ->
 		{
 			trap.addEntity(level.entitiesLayer);
+			return false;
+		});
+
+		FlxG.overlap(level.damageLayer, level.entitiesLayer, null, (damager, damagee) ->
+		{
+			damagee.damage(damager.health);
 			return false;
 		});
 	}

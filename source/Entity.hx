@@ -5,17 +5,20 @@ import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.ui.FlxBar;
+import haxe.Timer;
 
 class Entity extends FlxSprite
 {
 	public var speed:Float;
 	public var maxHealth:Int;
+	public var invulnerable:Bool;
 
 	public function new(X:Float = 0, Y:Float = 0, asset:FlxGraphicAsset, group:FlxGroup, speed:Float = 80, maxHealth:Int = 10)
 	{
 		super(X, Y);
 		this.speed = speed;
 		this.maxHealth = maxHealth;
+		this.invulnerable = false;
 
 		loadGraphic(asset, true, 16, 16);
 
@@ -41,7 +44,12 @@ class Entity extends FlxSprite
 
 	public function damage(amount:Int)
 	{
-		health -= (100 / maxHealth) * amount;
+		if (!invulnerable)
+		{
+			health -= (100 / maxHealth) * amount;
+			invulnerable = true;
+			Timer.delay(() -> invulnerable = false, 500);
+		}
 	}
 }
 

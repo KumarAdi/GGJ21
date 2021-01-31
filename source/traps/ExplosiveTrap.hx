@@ -26,6 +26,7 @@ class ExplosiveTrap extends FlxObject implements ITrap
 			{
 				explosion.kill();
 			};
+			explosion.health = 1;
 			this.level.add(explosion);
 			explosion.animation.play("explode");
 		}
