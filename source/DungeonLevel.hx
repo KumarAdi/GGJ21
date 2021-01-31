@@ -100,7 +100,7 @@ class DungeonLevel extends TiledMap
 		switch (o.type.toLowerCase())
 		{
 			case "player_start":
-				this.player = new PlayerEntity(x, y, AssetPaths.player__png, this);
+				this.player = new PlayerEntity(x, y, AssetPaths.pharaoh__png, this);
 				FlxG.camera.follow(player);
 				entitiesLayer.add(player);
 
@@ -111,8 +111,7 @@ class DungeonLevel extends TiledMap
 			case "boulder_trap":
 				var trap = new BoulderTrap(x, y, boulderLayer, o.properties.get("direction"));
 				trapsLayer.add(trap);
-        trapMap.set(o.name, trap);
-
+				trapMap.set(o.name, trap);
 			case "enemy_spawn":
 				switch (o.properties.get("type"))
 				{

@@ -46,7 +46,7 @@ class Entity extends FlxSprite
 		var bar = new FlxBar(0, 0, LEFT_TO_RIGHT, 60, 12);
 		bar.percent = 100;
 		bar.setParent(this, "health", true, 0, 0);
-		group.add(bar);
+		level.entitiesInfoLayer.add(bar);
 
 		animation.play("idle");
 	}
