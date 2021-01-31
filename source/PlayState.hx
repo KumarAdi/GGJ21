@@ -39,6 +39,11 @@ class PlayState extends FlxState
 
 		// things that can damage the player
 		add(level.boulderLayer);
+
+		if (FlxG.sound.music == null)
+		{
+			FlxG.sound.playMusic(AssetPaths.GGGAmbience__wav, 1, true);
+		}
 	}
 
 	override public function update(elapsed:Float)
