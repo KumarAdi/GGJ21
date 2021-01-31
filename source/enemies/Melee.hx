@@ -15,10 +15,26 @@ class MeleeEntity extends EnemyEntity
 	var oldFacing:Int;
 	var currentPath:LinearPath;
 
-	public function new(X:Float = 0, Y:Float = 0, asset:FlxGraphicAsset, level:DungeonLevel)
+	public function new(X:Float = 0, Y:Float = 0, level:DungeonLevel)
 	{
-		super(X, Y, asset, level, 40, 4);
+		super(X, Y, level, 40, 4);
 		oldFacing = facing;
+		visionRange = 400;
+		attackRange = 50;
+
+		loadGraphic(AssetPaths.scarab__png, true, 60, 90);
+
+		setFacingFlip(FlxObject.LEFT, false, false);
+		setFacingFlip(FlxObject.RIGHT, true, false);
+
+		animation.add("lr", [for (x in 10...18) x], 10, false);
+		animation.add("u", [for (x in 10...18) x], 10, false);
+		animation.add("d", [for (x in 10...18) x], 10, false);
+		animation.add("idle", [for (x in 0...8) x], 10, true);
+		animation.add("die", [for (x in 24...32) x], 10, true);
+		animation.add("attack", [for (x in 36...45) x], 10, true);
+
+		animation.play("attack");
 	}
 
 	override function update(elapsed:Float)
@@ -38,20 +54,23 @@ class MeleeEntity extends EnemyEntity
 
 	function idle()
 	{
-		if (currentPath != null && !currentPath.finished)
-		{
-			currentPath.cancelChain();
-		}
+		clearCurrentPath();
+
+		// if (animation.curAnim.name != "idle")
+		// {
+		// 	animation.play("idle");
+		// }
 	}
 
 	function moveTowards(pos:FlxPoint, changed:Bool)
 	{
+		// if (animation.curAnim.name != "u")
+		// {
+		// 	animation.play("u");
+		// }
 		if (changed)
 		{
-			if (currentPath != null && !currentPath.finished)
-			{
-				currentPath.cancelChain();
-			}
+			clearCurrentPath();
 
 			var path = pathing.findPath(getPosition(), pos);
 			if (path != null && path.length > 1)
@@ -63,15 +82,20 @@ class MeleeEntity extends EnemyEntity
 
 	function attack()
 	{
+		clearCurrentPath();
+		if (attackCountdown <= 0)
+		{
+			animation.play("attack");
+			level.player.damage(attackDamage);
+			attackCountdown = attackCooldown;
+		}
+	}
+
+	function clearCurrentPath()
+	{
 		if (currentPath != null && !currentPath.finished)
 		{
 			currentPath.cancelChain();
-		}
-		if (attackCountdown <= 0)
-		{
-			// TODO: play the animation
-			level.player.damage(attackDamage);
-			attackCountdown = attackCooldown;
 		}
 	}
 }

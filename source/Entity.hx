@@ -18,7 +18,7 @@ class Entity extends FlxSprite
 	public var level:DungeonLevel;
 	public var invulnerable:Bool;
 
-	public function new(X:Float = 0, Y:Float = 0, asset:FlxGraphicAsset, level:DungeonLevel, speed:Float = 80, maxHealth:Int = 10)
+	public function new(X:Float = 0, Y:Float = 0, level:DungeonLevel, speed:Float = 80, maxHealth:Int = 10)
 	{
 		super(X, Y);
 		this.speed = speed;
@@ -26,29 +26,17 @@ class Entity extends FlxSprite
 		this.level = level;
 		this.invulnerable = false;
 
-		loadGraphic(asset, true, 60, 90);
-
-		setFacingFlip(FlxObject.LEFT, false, false);
-		setFacingFlip(FlxObject.RIGHT, true, false);
+		health = 100;
 
 		maxVelocity.x = speed;
 		maxVelocity.y = speed;
 		drag.x = maxVelocity.x * 4;
 		drag.y = maxVelocity.y * 4;
 
-		animation.add("lr", [for (x in 10...18) x], 6, false);
-		animation.add("u", [for (x in 10...18) x], 6, false);
-		animation.add("d", [for (x in 10...18) x], 6, false);
-		animation.add("idle", [for (x in 0...8) x], 6, true);
-
-		health = 100;
-
 		var bar = new FlxBar(0, 0, LEFT_TO_RIGHT, 60, 12);
 		bar.percent = 100;
 		bar.setParent(this, "health", true, 0, 0);
 		level.entitiesInfoLayer.add(bar);
-
-		animation.play("idle");
 	}
 
 	public function damage(amount:Int)
@@ -66,7 +54,19 @@ class PlayerEntity extends Entity
 {
 	public function new(X:Float = 0, Y:Float = 0, asset:FlxGraphicAsset, level:DungeonLevel)
 	{
-		super(X, Y, asset, level, 80, 10);
+		super(X, Y, level, 80, 10);
+
+		loadGraphic(asset, true, 60, 90);
+
+		setFacingFlip(FlxObject.LEFT, false, false);
+		setFacingFlip(FlxObject.RIGHT, true, false);
+
+		animation.add("lr", [for (x in 10...18) x], 10, false);
+		animation.add("u", [for (x in 10...18) x], 10, false);
+		animation.add("d", [for (x in 10...18) x], 10, false);
+		animation.add("idle", [for (x in 0...8) x], 10, true);
+
+		animation.play("idle");
 	}
 
 	override function update(elapsed:Float)
@@ -171,9 +171,9 @@ class EnemyEntity extends Entity
 	// var moveSensitivty:Float = 10;
 	var mode:EnemyMode = Idle;
 
-	public function new(X:Float = 0, Y:Float = 0, asset:FlxGraphicAsset, level:DungeonLevel, speed:Float, maxHealth:Int)
+	public function new(X:Float = 0, Y:Float = 0, level:DungeonLevel, speed:Float, maxHealth:Int)
 	{
-		super(X, Y, asset, level, speed, maxHealth);
+		super(X, Y, level, speed, maxHealth);
 		mode = EnemyMode.Idle;
 	}
 
@@ -192,6 +192,7 @@ class EnemyEntity extends Entity
 		var playerPos = level.player.getPosition();
 
 		var distanceToPlayer = myPos.distanceTo(playerPos);
+		FlxG.watch.addQuick("distanceToPlayer", distanceToPlayer);
 		if (distanceToPlayer <= visionRange && distanceToPlayer > attackRange)
 		{
 			switch (mode)
