@@ -19,6 +19,8 @@ import flixel.group.FlxGroup;
 import flixel.group.FlxSpriteGroup;
 import flixel.tile.FlxTilemap;
 import haxe.io.Path;
+import traps.ExplosiveTrap;
+import traps.PressurePlate;
 
 class DungeonLevel extends TiledMap
 {
@@ -92,11 +94,7 @@ class DungeonLevel extends TiledMap
 				entitiesLayer.add(player);
 
 			case "floor_trap":
-				var trap = new FlxSprite(x, y);
-				trap.loadGraphic("assets/tiled/tile_placeholder.png", true, 16, 16);
-				trap.animation.add("normal", [3], 60, false);
-				trap.animation.add("pressed", [2], 60, false);
-				trap.animation.play("normal");
+				var trap = new PressurePlate(x, y, new ExplosiveTrap(x, y, foregroundTiles));
 				trapsLayer.add(trap);
 		}
 	}

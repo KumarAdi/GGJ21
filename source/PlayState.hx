@@ -4,7 +4,10 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.addons.plugin.FlxMouseControl;
 import flixel.util.FlxSort;
+import haxe.display.Display.Package;
+import traps.PressurePlate;
 
 class PlayState extends FlxState
 {
@@ -15,6 +18,8 @@ class PlayState extends FlxState
 	override public function create()
 	{
 		super.create();
+
+		FlxG.plugins.add(new FlxMouseControl());
 
 		level = new DungeonLevel("assets/tiled/0x72_16x16DungeonTileset_walls.v1.tmx");
 
@@ -37,15 +42,7 @@ class PlayState extends FlxState
 		level.collideWithLevel(level.player);
 		FlxG.overlap(level.trapsLayer, level.player, null, (trap, player) ->
 		{
-			var trapSprite:FlxSprite = cast trap;
-			trapSprite.animation.play("pressed", true);
-			trapSprite.animation.finishCallback = (name) ->
-			{
-				if (FlxG.overlap(trapSprite, player))
-					return;
-				trapSprite.animation.play("normal");
-				trapSprite.animation.finishCallback = null;
-			};
+			trap.addEntity(level.entitiesLayer);
 			return false;
 		});
 	}
