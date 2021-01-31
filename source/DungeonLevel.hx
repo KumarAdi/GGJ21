@@ -35,6 +35,7 @@ class DungeonLevel extends TiledMap
 	public var entitiesLayer:FlxSpriteGroup;
 	public var backgroundLayer:FlxGroup;
 	public var boulderLayer:FlxSpriteGroup;
+	public var pitLayer:FlxGroup;
 
 	private var trapMap:Map<String, ITrap>;
 
@@ -54,6 +55,7 @@ class DungeonLevel extends TiledMap
 		entitiesLayer = new FlxSpriteGroup();
 		backgroundLayer = new FlxGroup();
 		boulderLayer = new FlxSpriteGroup();
+		pitLayer = new FlxGroup();
 
 		this.trapMap = new Map();
 		FlxG.camera.setScrollBoundsRect(0, 0, fullWidth, fullHeight, true);
@@ -122,6 +124,9 @@ class DungeonLevel extends TiledMap
 					case "test":
 						// entitiesLayer.add(new TestEnemy(x, y, AssetPaths.player__png, this));
 				}
+			case "pit":
+				var pit = new FlxObject(x, y, o.width, o.height);
+				pitLayer.add(pit);
 		}
 	}
 

@@ -4,6 +4,9 @@ import flixel.FlxG;
 import flixel.FlxState;
 import flixel.addons.plugin.FlxMouseControl;
 import flixel.system.scaleModes.RatioScaleMode;
+import flixel.tweens.FlxTween.FlxTweenManager;
+import flixel.tweens.FlxTween;
+import flixel.tweens.misc.NumTween;
 import traps.BoulderTrap;
 
 class PlayState extends FlxState
@@ -31,14 +34,16 @@ class PlayState extends FlxState
 		// Load player & enemy objects
 		add(level.entitiesLayer);
 
+		// things that can damage the player
+		add(level.boulderLayer);
+
 		// Add foreground tiles after adding level objects, so these tiles render on top of player
 		add(level.foregroundTiles);
 
+		add(level.pitLayer);
+
 		// Load Entity info display like health bars
 		add(level.entitiesInfoLayer);
-
-		// things that can damage the player
-		add(level.boulderLayer);
 
 		if (FlxG.sound.music == null)
 		{
@@ -51,7 +56,34 @@ class PlayState extends FlxState
 		super.update(elapsed);
 		level.collideWithLevel(level.player);
 
+		FlxG.overlap(level.pitLayer, level.entitiesLayer, null, (pit, entity) ->
+		{
+			FlxTween.tween(entity, {
+				x: pit.x,
+				y: pit.y
+			}, 0.4);
+			FlxTween.tween(entity.scale, {
+				x: 0,
+				y: 0
+			}, 0.4);
+			return false;
+		});
+
+		FlxG.overlap(level.pitLayer, level.boulderLayer, null, (pit, entity) ->
+		{
+			FlxTween.tween(entity, {
+				x: pit.x,
+				y: pit.y
+			}, 0.4);
+			FlxTween.tween(entity.scale, {
+				x: 0,
+				y: 0
+			}, 0.4);
+			return false;
+		});
+
 		FlxG.overlap(level.triggerLayer, level.entitiesLayer, null, (trigger, entity) ->
+
 		{
 			if (FlxG.pixelPerfectOverlap(trigger, entity))
 			{
