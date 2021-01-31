@@ -48,7 +48,10 @@ class PlayState extends FlxState
 
 		FlxG.overlap(level.triggerLayer, level.entitiesLayer, null, (trigger, entity) ->
 		{
-			trigger.addEntity(entity);
+			if (FlxG.pixelPerfectOverlap(trigger, entity))
+			{
+				(cast trigger).addEntity(entity);
+			}
 			return false;
 		});
 
