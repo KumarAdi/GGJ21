@@ -1,6 +1,9 @@
 package;
 
 import Entity.PlayerEntity;
+import enemies.Melee.MeleeEntity;
+import enemies.Range.RangeEntity;
+import enemies.Test.TestEnemy;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.addons.editors.tiled.TiledLayer;
@@ -15,6 +18,7 @@ import flixel.addons.tile.FlxTilemapExt;
 import flixel.group.FlxGroup;
 import flixel.group.FlxSpriteGroup;
 import flixel.tile.FlxTilemap;
+import haxe.ds.IntMap;
 import haxe.io.Path;
 import traps.BoulderTrap;
 import traps.ITrap;
@@ -36,7 +40,8 @@ class DungeonLevel extends TiledMap
 
 	public var player:PlayerEntity;
 
-	var collidableTileLayers:Array<FlxTilemap>;
+	public var collidableTileLayers:Array<FlxTilemap>;
+	public var pathing:Map<String, FlxTilemap>;
 
 	public function new(tiledLevel:FlxTiledMapAsset)
 	{
@@ -52,8 +57,6 @@ class DungeonLevel extends TiledMap
 
 		this.trapMap = new Map();
 		FlxG.camera.setScrollBoundsRect(0, 0, fullWidth, fullHeight, true);
-
-		FlxG.camera.zoom = 3;
 
 		loadData();
 	}
@@ -97,18 +100,28 @@ class DungeonLevel extends TiledMap
 		switch (o.type.toLowerCase())
 		{
 			case "player_start":
-				this.player = new PlayerEntity(x, y, AssetPaths.player__png, entitiesInfoLayer);
+				this.player = new PlayerEntity(x, y, AssetPaths.pharaoh__png, this);
 				FlxG.camera.follow(player);
 				entitiesLayer.add(player);
 
 			case "floor_trap":
-				var trap = new PressurePlate(x, y, "boulder1", trapMap);
+				var trap = new PressurePlate(x, y, o.properties.get("trap"), trapMap);
 				triggerLayer.add(trap);
 
 			case "boulder_trap":
 				var trap = new BoulderTrap(x, y, boulderLayer, o.properties.get("direction"));
 				trapsLayer.add(trap);
 				trapMap.set(o.name, trap);
+			case "enemy_spawn":
+				switch (o.properties.get("type"))
+				{
+					case "melee":
+						entitiesLayer.add(new MeleeEntity(x, y, AssetPaths.player__png, this));
+					case "range":
+						entitiesLayer.add(new RangeEntity(x, y, AssetPaths.player__png, this));
+					case "test":
+						// entitiesLayer.add(new TestEnemy(x, y, AssetPaths.player__png, this));
+				}
 		}
 	}
 
@@ -141,7 +154,17 @@ class DungeonLevel extends TiledMap
 
 		// could be a regular FlxTilemap if there are no animated tiles
 		var tilemap = new FlxTilemapExt();
+
 		tilemap.loadMapFromArray(tileLayer.tileArray, width, height, processedPath, tileSet.tileWidth, tileSet.tileHeight, OFF, tileSet.firstGID, 1, 1);
+
+		if (tileLayer.properties.contains("pathing"))
+		{
+			if (pathing == null)
+				pathing = new Map<String, FlxTilemap>();
+
+			pathing[tileLayer.name] = tilemap;
+			return;
+		}
 
 		if (tileLayer.properties.contains("animated"))
 		{

@@ -2,15 +2,13 @@ package traps;
 
 import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.group.FlxGroup;
 import flixel.group.FlxSpriteGroup;
 import flixel.math.FlxPoint;
-import openfl.display.Shape;
 import traps.ITrap.TriggerEvent;
 
 class BoulderTrap extends FlxObject implements ITrap
 {
-	private final SPEED = 10;
+	private final SPEED = 60;
 
 	private var level:FlxSpriteGroup;
 	private var direction:FlxPoint;
@@ -26,9 +24,9 @@ class BoulderTrap extends FlxObject implements ITrap
 			case "right":
 				this.direction = new FlxPoint(1, 0);
 			case "up":
-				this.direction = new FlxPoint(0, 1);
-			case "down":
 				this.direction = new FlxPoint(0, -1);
+			case "down":
+				this.direction = new FlxPoint(0, 1);
 		}
 		this.direction.scale(SPEED);
 	}
@@ -38,12 +36,19 @@ class BoulderTrap extends FlxObject implements ITrap
 		if (event == Pressed)
 		{
 			var boulder = new FlxSprite(this.x, this.y);
-			boulder.loadGraphic("assets/images/rocks_rotated.png", true, 16, 16);
-			boulder.animation.add("explode", [for (i in 0...64) i], 32, true);
+			boulder.loadGraphic(AssetPaths.boulder__png, true, 90, 90);
+			boulder.animation.add("roll", [for (i in 0...16) i], 32, true);
+			boulder.animation.add("break", [for (x in 16...21) x], 32, false);
 			boulder.velocity = new FlxPoint(this.direction.x, this.direction.y);
 			boulder.health = 1;
 			this.level.add(boulder);
-			boulder.animation.play("explode");
+			boulder.animation.play("roll");
 		}
+	}
+
+	public static function killBoulder(boulder:FlxSprite)
+	{
+		boulder.animation.play("break");
+		boulder.animation.finishCallback = (_) -> boulder.kill();
 	}
 }

@@ -3,7 +3,11 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
+import flixel.math.FlxVelocity;
 import flixel.system.FlxAssets.FlxGraphicAsset;
+import flixel.tile.FlxTilemap;
+import flixel.tweens.FlxTween;
+import flixel.tweens.motion.LinearPath;
 import flixel.ui.FlxBar;
 import haxe.Timer;
 
@@ -11,16 +15,18 @@ class Entity extends FlxSprite
 {
 	public var speed:Float;
 	public var maxHealth:Int;
+	public var level:DungeonLevel;
 	public var invulnerable:Bool;
 
-	public function new(X:Float = 0, Y:Float = 0, asset:FlxGraphicAsset, group:FlxGroup, speed:Float = 80, maxHealth:Int = 10)
+	public function new(X:Float = 0, Y:Float = 0, asset:FlxGraphicAsset, level:DungeonLevel, speed:Float = 80, maxHealth:Int = 10)
 	{
 		super(X, Y);
 		this.speed = speed;
 		this.maxHealth = maxHealth;
+		this.level = level;
 		this.invulnerable = false;
 
-		loadGraphic(asset, true, 16, 16);
+		loadGraphic(asset, true, 60, 90);
 
 		setFacingFlip(FlxObject.LEFT, false, false);
 		setFacingFlip(FlxObject.RIGHT, true, false);
@@ -30,16 +36,19 @@ class Entity extends FlxSprite
 		drag.x = maxVelocity.x * 4;
 		drag.y = maxVelocity.y * 4;
 
-		animation.add("lr", [3, 4, 3, 5], 6, false);
-		animation.add("u", [6, 7, 6, 8], 6, false);
-		animation.add("d", [0, 1, 0, 2], 6, false);
+		animation.add("lr", [for (x in 10...18) x], 6, false);
+		animation.add("u", [for (x in 10...18) x], 6, false);
+		animation.add("d", [for (x in 10...18) x], 6, false);
+		animation.add("idle", [for (x in 0...8) x], 6, true);
 
 		health = 100;
 
-		var bar = new FlxBar(0, 0, LEFT_TO_RIGHT, 20, 4);
+		var bar = new FlxBar(0, 0, LEFT_TO_RIGHT, 60, 12);
 		bar.percent = 100;
-		bar.setParent(this, "health", true, -2, -6);
-		group.add(bar);
+		bar.setParent(this, "health", true, 0, 0);
+		level.entitiesInfoLayer.add(bar);
+
+		animation.play("idle");
 	}
 
 	public function damage(amount:Int)
@@ -55,9 +64,9 @@ class Entity extends FlxSprite
 
 class PlayerEntity extends Entity
 {
-	public function new(X:Float = 0, Y:Float = 0, asset:FlxGraphicAsset, group:FlxGroup)
+	public function new(X:Float = 0, Y:Float = 0, asset:FlxGraphicAsset, level:DungeonLevel)
 	{
-		super(X, Y, asset, group, 80, 10);
+		super(X, Y, asset, level, 80, 10);
 	}
 
 	override function update(elapsed:Float)
@@ -132,6 +141,87 @@ class PlayerEntity extends Entity
 						animation.play("d");
 				}
 			}
+		}
+		else
+		{
+			if (velocity.x == 0 && velocity.y == 0)
+			{
+				animation.play("idle", false);
+			}
+		}
+	}
+}
+
+enum EnemyMode
+{
+	Idle;
+	MovingTowards(path:FlxPoint, changed:Bool);
+	Attacking;
+}
+
+class EnemyEntity extends Entity
+{
+	var pathingKey:String = "avoidMelee";
+	var pathing:FlxTilemap;
+	var visionRange:Float = 100;
+	var attackRange:Float = 10;
+	var attackDamage:Int = 1;
+	var attackCooldown:Float = 1;
+	var attackCountdown:Float = 0;
+	// var moveSensitivty:Float = 10;
+	var mode:EnemyMode = Idle;
+
+	public function new(X:Float = 0, Y:Float = 0, asset:FlxGraphicAsset, level:DungeonLevel, speed:Float, maxHealth:Int)
+	{
+		super(X, Y, asset, level, speed, maxHealth);
+		mode = EnemyMode.Idle;
+	}
+
+	override function update(elapsed:Float)
+	{
+		if (pathing == null)
+			if (level.pathing.exists(pathingKey))
+				pathing = level.pathing[pathingKey];
+		updateMode(elapsed);
+		updateAttackCountdown(elapsed);
+	}
+
+	function updateMode(elapsed:Float)
+	{
+		var myPos = getPosition();
+		var playerPos = level.player.getPosition();
+
+		var distanceToPlayer = myPos.distanceTo(playerPos);
+		if (distanceToPlayer <= visionRange && distanceToPlayer > attackRange)
+		{
+			switch (mode)
+			{
+				case MovingTowards(pos, changed):
+					if (pos.equals(playerPos))
+					{
+						return;
+					}
+				default:
+			}
+			if (level.collidableTileLayers[0].ray(myPos, playerPos))
+			{
+				mode = MovingTowards(playerPos, true);
+				return;
+			}
+		}
+		else if (distanceToPlayer < attackRange)
+		{
+			mode = Attacking;
+			return;
+		}
+		mode = EnemyMode.Idle;
+	}
+
+	function updateAttackCountdown(elapsed:Float)
+	{
+		if (attackCountdown > 0)
+		{
+			attackCountdown -= elapsed;
 		}
 	}
 }

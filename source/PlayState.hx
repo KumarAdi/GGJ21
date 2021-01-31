@@ -1,14 +1,10 @@
 package;
 
 import flixel.FlxG;
-import flixel.FlxObject;
-import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.addons.plugin.FlxMouseControl;
-import flixel.ui.FlxBar;
-import flixel.util.FlxSort;
-import haxe.display.Display.Package;
-import traps.PressurePlate;
+import flixel.system.scaleModes.RatioScaleMode;
+import traps.BoulderTrap;
 
 class PlayState extends FlxState
 {
@@ -17,10 +13,12 @@ class PlayState extends FlxState
 	override public function create()
 	{
 		super.create();
+		FlxG.debugger.visible = true;
+		FlxG.scaleMode = new RatioScaleMode();
 
 		FlxG.plugins.add(new FlxMouseControl());
 
-		level = new DungeonLevel("assets/tiled/0x72_16x16DungeonTileset_walls.v1.tmx");
+		level = new DungeonLevel("assets/tiled/test_map.tmx");
 
 		// Add backgrounds
 		add(level.backgroundLayer);
@@ -56,14 +54,17 @@ class PlayState extends FlxState
 
 		FlxG.overlap(level.boulderLayer, level.entitiesLayer, null, (boulder, entity) ->
 		{
-			entity.damage(boulder.health);
-			boulder.kill();
+			if (FlxG.pixelPerfectOverlap(boulder, entity))
+			{
+				(cast entity).damage(boulder.health);
+				BoulderTrap.killBoulder(cast boulder);
+			}
 			return false;
 		});
 
 		level.boulderLayer.forEachAlive((b) -> level.collideWithLevel(b, (level, boulder) ->
 		{
-			boulder.kill();
+			BoulderTrap.killBoulder(cast boulder);
 		}));
 	}
 }
