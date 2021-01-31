@@ -3,6 +3,8 @@ package;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.addons.plugin.FlxMouseControl;
+import flixel.system.scaleModes.RatioScaleMode;
+import traps.BoulderTrap;
 
 class PlayState extends FlxState
 {
@@ -12,6 +14,7 @@ class PlayState extends FlxState
 	{
 		super.create();
 		FlxG.debugger.visible = true;
+		FlxG.scaleMode = new RatioScaleMode();
 
 		FlxG.plugins.add(new FlxMouseControl());
 
@@ -51,14 +54,17 @@ class PlayState extends FlxState
 
 		FlxG.overlap(level.boulderLayer, level.entitiesLayer, null, (boulder, entity) ->
 		{
-			entity.damage(boulder.health);
-			boulder.kill();
+			if (FlxG.pixelPerfectOverlap(boulder, entity))
+			{
+				(cast entity).damage(boulder.health);
+				BoulderTrap.killBoulder(cast boulder);
+			}
 			return false;
 		});
 
 		level.boulderLayer.forEachAlive((b) -> level.collideWithLevel(b, (level, boulder) ->
 		{
-			boulder.kill();
+			BoulderTrap.killBoulder(cast boulder);
 		}));
 	}
 }

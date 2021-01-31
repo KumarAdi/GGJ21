@@ -33,13 +33,16 @@ class Entity extends FlxSprite
 		animation.add("lr", [for (x in 10...18) x], 6, false);
 		animation.add("u", [for (x in 10...18) x], 6, false);
 		animation.add("d", [for (x in 10...18) x], 6, false);
+		animation.add("idle", [for (x in 0...8) x], 6, true);
 
 		health = 100;
 
-		// var bar = new FlxBar(0, 0, LEFT_TO_RIGHT, 20, 4);
-		// bar.percent = 100;
-		// bar.setParent(this, "health", true, -2, -6);
-		// group.add(bar);
+		var bar = new FlxBar(0, 0, LEFT_TO_RIGHT, 60, 12);
+		bar.percent = 100;
+		bar.setParent(this, "health", true, 0, 0);
+		group.add(bar);
+
+		animation.play("idle");
 	}
 
 	public function damage(amount:Int)
@@ -131,6 +134,13 @@ class PlayerEntity extends Entity
 					case FlxObject.DOWN:
 						animation.play("d");
 				}
+			}
+		}
+		else
+		{
+			if (velocity.x == 0 && velocity.y == 0)
+			{
+				animation.play("idle", false);
 			}
 		}
 	}
