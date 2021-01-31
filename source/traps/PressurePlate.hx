@@ -33,8 +33,8 @@ class PressurePlate extends FlxEffectSprite
 		super(this.sprite, [this.outlineEffect]);
 
 		this.sprite.loadGraphic(AssetPaths.tiles__png, true, 60, 60);
-		this.sprite.animation.add("normal", [51], 60, true);
-		this.sprite.animation.add("pressed", [51], 60, true);
+		this.sprite.animation.add("normal", [51], 60, false);
+		this.sprite.animation.add("pressed", [52], 60, false);
 		this.sprite.animation.play("normal");
 
 		this.entities = [];
@@ -50,7 +50,14 @@ class PressurePlate extends FlxEffectSprite
 	{
 		if (this.entities.length == 0)
 		{
-			this.animation.play((event == Pressed) ? "pressed" : "normal", true);
+			var animationName = switch event
+			{
+				case Pressed:
+					"pressed";
+				case Released:
+					"normal";
+			};
+			this.sprite.animation.play(animationName, true);
 			this.trapMap[trapName].triggerEvent(event);
 		}
 	}
@@ -71,18 +78,23 @@ class PressurePlate extends FlxEffectSprite
 			this.entities.push(Mouse);
 		}
 
-		entities = entities.filter((entity) ->
+		if (entities.length > 0)
 		{
-			switch (entity)
+			entities = entities.filter((entity) ->
 			{
-				case Mouse:
-					return (FlxG.mouse.pressed && this.sprite.mouseOver);
-				case Entity(sprite):
-					return FlxG.overlap(this, sprite);
-			}
-		});
+				var keep = switch (entity)
+				{
+					case Mouse:
+						(FlxG.mouse.pressed && this.sprite.mouseOver);
+					case Entity(sprite):
+						FlxG.overlap(this, sprite);
+				}
 
-		dispatch(Released);
+				return keep;
+			});
+
+			dispatch(Released);
+		}
 
 		super.update(dt);
 	}
