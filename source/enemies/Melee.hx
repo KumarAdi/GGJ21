@@ -34,7 +34,7 @@ class MeleeEntity extends EnemyEntity
 		animation.add("die", [for (x in 24...32) x], 10, true);
 		animation.add("attack", [for (x in 36...45) x], 10, true);
 
-		animation.play("idle");
+		animation.play("attack");
 	}
 
 	override function update(elapsed:Float)

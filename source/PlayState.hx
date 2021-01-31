@@ -3,16 +3,19 @@ package;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.addons.plugin.FlxMouseControl;
+import flixel.group.FlxGroup;
 import flixel.system.scaleModes.RatioScaleMode;
 import traps.BoulderTrap;
 
 class PlayState extends FlxState
 {
 	public var level:DungeonLevel;
+	public var projectiles:FlxGroup;
 
 	override public function create()
 	{
 		super.create();
+		projectiles = new FlxGroup();
 		FlxG.debugger.visible = true;
 		FlxG.scaleMode = new RatioScaleMode();
 
@@ -39,6 +42,8 @@ class PlayState extends FlxState
 
 		// things that can damage the player
 		add(level.boulderLayer);
+
+		add(projectiles);
 
 		if (FlxG.sound.music == null)
 		{
@@ -74,5 +79,16 @@ class PlayState extends FlxState
 		{
 			BoulderTrap.killBoulder(cast boulder);
 		}));
+
+		// Projectile overlap
+		FlxG.overlap(projectiles, level.player, null, (projectile, player) ->
+		{
+			if (FlxG.pixelPerfectOverlap(projectile, player))
+			{
+				(cast player).damage(projectile.health);
+				projectile.destroy();
+			}
+			return false;
+		});
 	}
 }

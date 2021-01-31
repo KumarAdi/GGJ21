@@ -4,7 +4,9 @@ import Entity.EnemyEntity;
 import Entity.EnemyMode;
 import flixel.FlxG;
 import flixel.FlxObject;
+import flixel.FlxSprite;
 import flixel.math.FlxPoint;
+import flixel.math.FlxVelocity;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.tile.FlxTilemap;
 import flixel.tweens.FlxTween;
@@ -14,14 +16,16 @@ class RangeEntity extends EnemyEntity
 {
 	var oldFacing:Int;
 	var currentPath:LinearPath;
+	var projectileSpeed:Float = 150;
+	var minAttackRange:Float = 400;
 
 	public function new(X:Float = 0, Y:Float = 0, level:DungeonLevel)
 	{
 		super(X, Y, level, 40, 4);
 		oldFacing = facing;
 		pathingKey = "avoidRange";
-		visionRange = 150;
-		attackRange = 100;
+		visionRange = 500;
+		attackRange = 300;
 
 		// TODO replace with the real animation
 		loadGraphic(AssetPaths.pharaoh__png, true, 60, 90);
@@ -62,6 +66,11 @@ class RangeEntity extends EnemyEntity
 
 	function moveTowards(pos:FlxPoint, changed:Bool)
 	{
+		if (getPosition().distanceTo(pos) < minAttackRange)
+		{
+			attack();
+		}
+
 		if (changed)
 		{
 			clearCurrentPath();
@@ -80,7 +89,11 @@ class RangeEntity extends EnemyEntity
 		if (attackCountdown <= 0)
 		{
 			// TODO: play the animation
-			level.player.damage(attackDamage);
+			var projectile = new FlxSprite(x, y);
+			projectile.makeGraphic(60, 90, 0xFFFFFFFF);
+			FlxVelocity.moveTowardsObject(projectile, level.player, projectileSpeed);
+			(cast FlxG.state).projectiles.add(projectile);
+			// level.player.damage(attackDamage);
 			attackCountdown = attackCooldown;
 		}
 	}
