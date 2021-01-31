@@ -2,10 +2,8 @@ package traps;
 
 import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.group.FlxGroup;
 import flixel.group.FlxSpriteGroup;
 import flixel.math.FlxPoint;
-import openfl.display.Shape;
 import traps.ITrap.TriggerEvent;
 
 class BoulderTrap extends FlxObject implements ITrap
@@ -26,9 +24,9 @@ class BoulderTrap extends FlxObject implements ITrap
 			case "right":
 				this.direction = new FlxPoint(1, 0);
 			case "up":
-				this.direction = new FlxPoint(0, 1);
-			case "down":
 				this.direction = new FlxPoint(0, -1);
+			case "down":
+				this.direction = new FlxPoint(0, 1);
 		}
 		this.direction.scale(SPEED);
 	}

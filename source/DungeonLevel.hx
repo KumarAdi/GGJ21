@@ -15,6 +15,7 @@ import flixel.addons.tile.FlxTilemapExt;
 import flixel.group.FlxGroup;
 import flixel.group.FlxSpriteGroup;
 import flixel.tile.FlxTilemap;
+import haxe.ds.IntMap;
 import haxe.io.Path;
 import traps.BoulderTrap;
 import traps.ITrap;
@@ -52,8 +53,6 @@ class DungeonLevel extends TiledMap
 
 		this.trapMap = new Map();
 		FlxG.camera.setScrollBoundsRect(0, 0, fullWidth, fullHeight, true);
-
-		FlxG.camera.zoom = 3;
 
 		loadData();
 	}
@@ -97,12 +96,12 @@ class DungeonLevel extends TiledMap
 		switch (o.type.toLowerCase())
 		{
 			case "player_start":
-				this.player = new PlayerEntity(x, y, AssetPaths.player__png, entitiesInfoLayer);
+				this.player = new PlayerEntity(x, y, AssetPaths.pharaoh__png, entitiesInfoLayer);
 				FlxG.camera.follow(player);
 				entitiesLayer.add(player);
 
 			case "floor_trap":
-				var trap = new PressurePlate(x, y, "boulder1", trapMap);
+				var trap = new PressurePlate(x, y, o.properties.get("trap"), trapMap);
 				triggerLayer.add(trap);
 
 			case "boulder_trap":
@@ -141,6 +140,7 @@ class DungeonLevel extends TiledMap
 
 		// could be a regular FlxTilemap if there are no animated tiles
 		var tilemap = new FlxTilemapExt();
+
 		tilemap.loadMapFromArray(tileLayer.tileArray, width, height, processedPath, tileSet.tileWidth, tileSet.tileHeight, OFF, tileSet.firstGID, 1, 1);
 
 		if (tileLayer.properties.contains("animated"))

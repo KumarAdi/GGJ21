@@ -20,7 +20,7 @@ class Entity extends FlxSprite
 		this.maxHealth = maxHealth;
 		this.invulnerable = false;
 
-		loadGraphic(asset, true, 16, 16);
+		loadGraphic(asset, true, 60, 90);
 
 		setFacingFlip(FlxObject.LEFT, false, false);
 		setFacingFlip(FlxObject.RIGHT, true, false);
@@ -30,16 +30,16 @@ class Entity extends FlxSprite
 		drag.x = maxVelocity.x * 4;
 		drag.y = maxVelocity.y * 4;
 
-		animation.add("lr", [3, 4, 3, 5], 6, false);
-		animation.add("u", [6, 7, 6, 8], 6, false);
-		animation.add("d", [0, 1, 0, 2], 6, false);
+		animation.add("lr", [for (x in 10...18) x], 6, false);
+		animation.add("u", [for (x in 10...18) x], 6, false);
+		animation.add("d", [for (x in 10...18) x], 6, false);
 
 		health = 100;
 
-		var bar = new FlxBar(0, 0, LEFT_TO_RIGHT, 20, 4);
-		bar.percent = 100;
-		bar.setParent(this, "health", true, -2, -6);
-		group.add(bar);
+		// var bar = new FlxBar(0, 0, LEFT_TO_RIGHT, 20, 4);
+		// bar.percent = 100;
+		// bar.setParent(this, "health", true, -2, -6);
+		// group.add(bar);
 	}
 
 	public function damage(amount:Int)

@@ -1,14 +1,8 @@
 package;
 
 import flixel.FlxG;
-import flixel.FlxObject;
-import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.addons.plugin.FlxMouseControl;
-import flixel.ui.FlxBar;
-import flixel.util.FlxSort;
-import haxe.display.Display.Package;
-import traps.PressurePlate;
 
 class PlayState extends FlxState
 {
@@ -17,10 +11,11 @@ class PlayState extends FlxState
 	override public function create()
 	{
 		super.create();
+		FlxG.debugger.visible = true;
 
 		FlxG.plugins.add(new FlxMouseControl());
 
-		level = new DungeonLevel("assets/tiled/0x72_16x16DungeonTileset_walls.v1.tmx");
+		level = new DungeonLevel("assets/tiled/test_map.tmx");
 
 		// Add backgrounds
 		add(level.backgroundLayer);

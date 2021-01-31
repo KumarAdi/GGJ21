@@ -32,9 +32,9 @@ class PressurePlate extends FlxEffectSprite
 
 		super(this.sprite, [this.outlineEffect]);
 
-		this.sprite.loadGraphic("assets/tiled/tile_placeholder.png", true, 16, 16);
-		this.sprite.animation.add("normal", [3], 60, true);
-		this.sprite.animation.add("pressed", [2], 60, true);
+		this.sprite.loadGraphic(AssetPaths.tiles__png, true, 60, 60);
+		this.sprite.animation.add("normal", [51], 60, true);
+		this.sprite.animation.add("pressed", [51], 60, true);
 		this.sprite.animation.play("normal");
 
 		this.entities = [];
