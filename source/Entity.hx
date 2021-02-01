@@ -44,8 +44,6 @@ class Entity extends FlxSprite
 		if (!invulnerable)
 		{
 			health -= (100 / maxHealth) * amount;
-			invulnerable = true;
-			Timer.delay(() -> invulnerable = false, 500);
 		}
 	}
 
