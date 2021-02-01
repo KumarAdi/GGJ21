@@ -61,7 +61,7 @@ class PlayerEntity extends Entity
 {
 	var dashCooldown:Float = 2;
 	var dashAvailable:Bool = true;
-	var dashSpeed:Float = 300;
+	var dashSpeed:Float = 500;
 
 	public function new(X:Float = 0, Y:Float = 0, asset:FlxGraphicAsset, level:DungeonLevel)
 	{

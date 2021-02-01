@@ -97,7 +97,7 @@ class MeleeEntity extends EnemyEntity
 
 	function dead()
 	{
-		if (animation.curAnim.name != "dead")
+		if (animation.curAnim == null || animation.curAnim.name != "dead")
 		{
 			animation.play("dead");
 		}
