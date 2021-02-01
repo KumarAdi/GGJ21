@@ -62,9 +62,6 @@ class PlayerEntity extends Entity
 {
 	public function new(X:Float = 0, Y:Float = 0, asset:FlxGraphicAsset, level:DungeonLevel)
 	{
-<<<<<<< HEAD
-		super(X, Y, asset, level, 160, 10);
-=======
 		super(X, Y, level, 80, 10);
 
 		loadGraphic(asset, true, 60, 90);
@@ -80,7 +77,6 @@ class PlayerEntity extends Entity
 		animation.play("idle");
 
 		halfHitbox();
->>>>>>> b4be82e722ab54e86854fdfbb286ea421af99fab
 	}
 
 	override function update(elapsed:Float)
