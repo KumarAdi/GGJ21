@@ -27,7 +27,7 @@
 
 	<!-- _____________________________ Path Settings ____________________________ -->
 
-	<set name="BUILD_DIR" value="export" />
+	<set name="BUILD_DIR" value="docs" />
 	<classpath name="source" />
 	<assets path="assets" />
 
