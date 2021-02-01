@@ -17,6 +17,7 @@ class Entity extends FlxSprite
 	public var maxHealth:Int;
 	public var level:DungeonLevel;
 	public var invulnerable:Bool;
+	public var bar:FlxBar;
 
 	public function new(X:Float = 0, Y:Float = 0, level:DungeonLevel, speed:Float = 80, maxHealth:Int = 10)
 	{
@@ -33,7 +34,7 @@ class Entity extends FlxSprite
 		drag.x = maxVelocity.x * 4;
 		drag.y = maxVelocity.y * 4;
 
-		var bar = new FlxBar(0, 0, LEFT_TO_RIGHT, 60, 12);
+		bar = new FlxBar(0, 0, LEFT_TO_RIGHT, 60, 12);
 		bar.percent = 100;
 		bar.setParent(this, "health", true, 0, 0);
 		level.entitiesInfoLayer.add(bar);
@@ -47,6 +48,13 @@ class Entity extends FlxSprite
 			invulnerable = true;
 			Timer.delay(() -> invulnerable = false, 500);
 		}
+	}
+
+	public function halfHitbox()
+	{
+		height /= 2;
+		offset.y += height;
+		bar.offset.y += height;
 	}
 }
 
@@ -67,6 +75,8 @@ class PlayerEntity extends Entity
 		animation.add("idle", [for (x in 0...8) x], 10, true);
 
 		animation.play("idle");
+
+		halfHitbox();
 	}
 
 	override function update(elapsed:Float)

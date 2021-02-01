@@ -35,6 +35,8 @@ class MeleeEntity extends EnemyEntity
 		animation.add("attack", [for (x in 36...45) x], 10, true);
 
 		animation.play("attack");
+
+		halfHitbox();
 	}
 
 	override function update(elapsed:Float)
