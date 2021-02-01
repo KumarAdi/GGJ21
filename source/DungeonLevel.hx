@@ -196,6 +196,7 @@ class DungeonLevel extends TiledMap
 			if (collidableTileLayers == null)
 				collidableTileLayers = new Array<FlxTilemap>();
 
+			trace('forground map: ${layer.name}');
 			foregroundTiles.add(tilemap);
 			if (!tileLayer.properties.contains("above"))
 			{
