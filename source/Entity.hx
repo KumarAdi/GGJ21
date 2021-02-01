@@ -9,6 +9,7 @@ import flixel.tile.FlxTilemap;
 import flixel.tweens.FlxTween;
 import flixel.tweens.motion.LinearPath;
 import flixel.ui.FlxBar;
+import flixel.util.FlxTimer;
 import haxe.Timer;
 
 class Entity extends FlxSprite
@@ -29,10 +30,8 @@ class Entity extends FlxSprite
 
 		health = 100;
 
-		maxVelocity.x = speed;
-		maxVelocity.y = speed;
-		drag.x = maxVelocity.x * 4;
-		drag.y = maxVelocity.y * 4;
+		drag.x = speed * 4;
+		drag.y = speed * 4;
 
 		bar = new FlxBar(0, 0, LEFT_TO_RIGHT, 60, 12);
 		bar.percent = 100;
@@ -60,6 +59,10 @@ class Entity extends FlxSprite
 
 class PlayerEntity extends Entity
 {
+	var dashCooldown:Float = 2;
+	var dashAvailable:Bool = true;
+	var dashSpeed:Float = 300;
+
 	public function new(X:Float = 0, Y:Float = 0, asset:FlxGraphicAsset, level:DungeonLevel)
 	{
 		super(X, Y, level, 160, 10);
@@ -82,7 +85,34 @@ class PlayerEntity extends Entity
 	override function update(elapsed:Float)
 	{
 		updateMovement();
+		handleDash();
 		super.update(elapsed);
+	}
+
+	function handleDash()
+	{
+		if (FlxG.keys.anyPressed([SHIFT]) && dashAvailable)
+		{
+			var newAngle = 0;
+			switch (facing)
+			{
+				case FlxObject.UP:
+					newAngle = -90;
+				case FlxObject.DOWN:
+					newAngle = 90;
+				case FlxObject.LEFT:
+					newAngle = 180;
+				case FlxObject.RIGHT:
+			}
+
+			velocity.set(dashSpeed, 0);
+			velocity.rotate(FlxPoint.weak(0, 0), newAngle);
+			dashAvailable = false;
+			new FlxTimer().start(dashCooldown, function(timer:FlxTimer)
+			{
+				dashAvailable = true;
+			}, 1);
+		}
 	}
 
 	function updateMovement()
@@ -135,8 +165,11 @@ class PlayerEntity extends Entity
 			}
 
 			// determine our velocity based on angle and speed
-			velocity.set(speed, 0);
-			velocity.rotate(FlxPoint.weak(0, 0), newAngle);
+			if (velocity.distanceTo(new FlxPoint(0, 0)) < speed)
+			{
+				velocity.set(speed, 0);
+				velocity.rotate(FlxPoint.weak(0, 0), newAngle);
+			}
 
 			// if the player is moving (velocity is not 0 for either axis), we need to change the animation to match their facing
 			if ((velocity.x != 0 || velocity.y != 0) && touching == FlxObject.NONE)
