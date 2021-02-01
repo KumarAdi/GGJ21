@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="60" tileheight="60" infinite="0" nextlayerid="11" nextobjectid="174">
+<map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="60" tileheight="60" infinite="0" nextlayerid="11" nextobjectid="144">
  <tileset firstgid="1" source="tiles_final.tsx"/>
  <layer id="1" name="floor" width="100" height="100">
   <properties>
@@ -401,6 +401,7 @@
     <property name="type" value="melee"/>
    </properties>
   </object>
+<<<<<<< HEAD
   <object id="147" name="Patrick" type="enemy_spawn" x="360" y="3720" width="60" height="60">
    <properties>
     <property name="type" value="melee"/>
@@ -471,6 +472,8 @@
     <property name="type" value="range"/>
    </properties>
   </object>
+=======
+>>>>>>> c37941888718f4e8863c55a26da7954c09b4d283
  </objectgroup>
  <objectgroup id="4" name="trap_triggers">
   <object id="2" type="floor_trap" x="1617.33" y="298.667" width="60" height="60">

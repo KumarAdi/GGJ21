@@ -57,13 +57,13 @@ class Entity extends FlxSprite
 
 class PlayerEntity extends Entity
 {
-	var dashCooldown:Float = 2;
+	var dashCooldown:Float = 1;
 	var dashAvailable:Bool = true;
 	var dashSpeed:Float = 500;
 
 	public function new(X:Float = 0, Y:Float = 0, asset:FlxGraphicAsset, level:DungeonLevel)
 	{
-		super(X, Y, level, 160, 10);
+		super(X, Y, level, 180, 10);
 
 		loadGraphic(asset, true, 60, 90);
 
