@@ -62,7 +62,7 @@ class PlayerEntity extends Entity
 {
 	public function new(X:Float = 0, Y:Float = 0, asset:FlxGraphicAsset, level:DungeonLevel)
 	{
-		super(X, Y, level, 80, 10);
+		super(X, Y, level, 160, 10);
 
 		loadGraphic(asset, true, 60, 90);
 
