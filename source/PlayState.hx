@@ -3,22 +3,20 @@ package;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.addons.plugin.FlxMouseControl;
-import flixel.group.FlxGroup;
+import flixel.group.FlxSpriteGroup;
 import flixel.system.scaleModes.RatioScaleMode;
-import flixel.tweens.FlxTween.FlxTweenManager;
 import flixel.tweens.FlxTween;
-import flixel.tweens.misc.NumTween;
 import traps.BoulderTrap;
 
 class PlayState extends FlxState
 {
 	public var level:DungeonLevel;
-	public var projectiles:FlxGroup;
+	public var projectiles:FlxSpriteGroup;
 
 	override public function create()
 	{
 		super.create();
-		projectiles = new FlxGroup();
+		projectiles = new FlxSpriteGroup();
 		FlxG.debugger.visible = true;
 		FlxG.scaleMode = new RatioScaleMode();
 
@@ -88,7 +86,15 @@ class PlayState extends FlxState
 		});
 
 		FlxG.overlap(level.triggerLayer, level.entitiesLayer, null, (trigger, entity) ->
+		{
+			if (FlxG.pixelPerfectOverlap(trigger, entity))
+			{
+				(cast trigger).addEntity(entity);
+			}
+			return false;
+		});
 
+		FlxG.overlap(level.triggerLayer, level.boulderLayer, null, (trigger, entity) ->
 		{
 			if (FlxG.pixelPerfectOverlap(trigger, entity))
 			{
@@ -110,6 +116,11 @@ class PlayState extends FlxState
 		level.boulderLayer.forEachAlive((b) -> level.collideWithLevel(b, (level, boulder) ->
 		{
 			BoulderTrap.killBoulder(cast boulder);
+		}));
+
+		projectiles.forEachAlive((b) -> level.collideWithLevel(b, (level, proj) ->
+		{
+			proj.kill();
 		}));
 
 		// Projectile overlap

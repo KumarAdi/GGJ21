@@ -17,7 +17,7 @@ class MeleeEntity extends EnemyEntity
 
 	public function new(X:Float = 0, Y:Float = 0, level:DungeonLevel)
 	{
-		super(X, Y, level, 40, 4);
+		super(X, Y, level, 180, 4);
 		oldFacing = facing;
 		visionRange = 400;
 		attackRange = 50;

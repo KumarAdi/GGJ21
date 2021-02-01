@@ -22,7 +22,7 @@ class RangeEntity extends EnemyEntity
 
 	public function new(X:Float = 0, Y:Float = 0, level:DungeonLevel)
 	{
-		super(X, Y, level, 100, 4);
+		super(X, Y, level, 160, 4);
 		oldFacing = facing;
 		pathingKey = "avoidRange";
 		visionRange = 600;
