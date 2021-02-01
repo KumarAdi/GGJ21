@@ -59,6 +59,8 @@ class RangeEntity extends EnemyEntity
 					moveTowards(pos, changed);
 			case EnemyMode.Attacking:
 				attack();
+			case EnemyMode.Dead:
+				dead();
 		}
 	}
 
@@ -101,6 +103,14 @@ class RangeEntity extends EnemyEntity
 			(cast FlxG.state).projectiles.add(projectile);
 			// level.player.damage(attackDamage);
 			attackCountdown = attackCooldown;
+		}
+	}
+
+	function dead()
+	{
+		if (animation.curAnim.name != "dead")
+		{
+			animation.play("dead");
 		}
 	}
 

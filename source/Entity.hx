@@ -200,6 +200,7 @@ enum EnemyMode
 	Idle;
 	MovingTowards(path:FlxPoint, changed:Bool);
 	Attacking;
+	Dead;
 }
 
 class EnemyEntity extends Entity
@@ -233,6 +234,12 @@ class EnemyEntity extends Entity
 	{
 		var myPos = getPosition();
 		var playerPos = level.player.getPosition();
+
+		if (health <= 0)
+		{
+			mode = Dead;
+			return;
+		}
 
 		var distanceToPlayer = myPos.distanceTo(playerPos);
 		FlxG.watch.addQuick("distanceToPlayer", distanceToPlayer);

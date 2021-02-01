@@ -31,7 +31,7 @@ class MeleeEntity extends EnemyEntity
 		animation.add("u", [for (x in 10...18) x], 10, false);
 		animation.add("d", [for (x in 10...18) x], 10, false);
 		animation.add("idle", [for (x in 0...8) x], 10, true);
-		animation.add("die", [for (x in 24...32) x], 10, true);
+		animation.add("dead", [for (x in 24...32) x], 10, true);
 		animation.add("attack", [for (x in 36...45) x], 10, true);
 
 		animation.play("attack");
@@ -51,6 +51,8 @@ class MeleeEntity extends EnemyEntity
 					moveTowards(pos, changed);
 			case EnemyMode.Attacking:
 				attack();
+			case EnemyMode.Dead:
+				dead();
 		}
 	}
 
@@ -90,6 +92,14 @@ class MeleeEntity extends EnemyEntity
 			animation.play("attack");
 			level.player.damage(attackDamage);
 			attackCountdown = attackCooldown;
+		}
+	}
+
+	function dead()
+	{
+		if (animation.curAnim.name != "dead")
+		{
+			animation.play("dead");
 		}
 	}
 
