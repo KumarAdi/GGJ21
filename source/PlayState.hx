@@ -76,14 +76,17 @@ class PlayState extends FlxState
 
 		FlxG.overlap(level.pitLayer, level.boulderLayer, null, (pit, entity) ->
 		{
-			FlxTween.tween(entity, {
-				x: pit.x,
-				y: pit.y
-			}, 0.4);
-			FlxTween.tween(entity.scale, {
-				x: 0,
-				y: 0
-			}, 0.4);
+			if (FlxG.pixelPerfectOverlap(pit, entity))
+			{
+				FlxTween.tween(entity, {
+					x: pit.x,
+					y: pit.y
+				}, 0.4);
+				FlxTween.tween(entity.scale, {
+					x: 0,
+					y: 0
+				}, 0.4);
+			}
 			return false;
 		});
 
