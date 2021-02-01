@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="60" tileheight="60" infinite="0" nextlayerid="11" nextobjectid="144">
+<map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="60" tileheight="60" infinite="0" nextlayerid="11" nextobjectid="174">
  <tileset firstgid="1" source="tiles_final.tsx"/>
  <layer id="1" name="floor" width="100" height="100">
   <properties>
@@ -399,6 +399,76 @@
   <object id="43" name="Patrick" type="enemy_spawn" x="120" y="3600" width="60" height="60">
    <properties>
     <property name="type" value="melee"/>
+   </properties>
+  </object>
+  <object id="147" name="Patrick" type="enemy_spawn" x="360" y="3720" width="60" height="60">
+   <properties>
+    <property name="type" value="melee"/>
+   </properties>
+  </object>
+  <object id="149" name="Patrick" type="enemy_spawn" x="480" y="3720" width="60" height="60">
+   <properties>
+    <property name="type" value="melee"/>
+   </properties>
+  </object>
+  <object id="153" name="Patrick" type="enemy_spawn" x="360" y="4200" width="60" height="60">
+   <properties>
+    <property name="type" value="melee"/>
+   </properties>
+  </object>
+  <object id="155" name="Patrick" type="enemy_spawn" x="480" y="4200" width="60" height="60">
+   <properties>
+    <property name="type" value="melee"/>
+   </properties>
+  </object>
+  <object id="160" name="Patrick" type="enemy_spawn" x="360" y="4680" width="60" height="60">
+   <properties>
+    <property name="type" value="melee"/>
+   </properties>
+  </object>
+  <object id="162" name="Patrick" type="enemy_spawn" x="480" y="4680" width="60" height="60">
+   <properties>
+    <property name="type" value="melee"/>
+   </properties>
+  </object>
+  <object id="166" name="James" type="enemy_spawn" x="720" y="4800" width="60" height="60">
+   <properties>
+    <property name="type" value="range"/>
+   </properties>
+  </object>
+  <object id="167" name="James" type="enemy_spawn" x="120" y="5040" width="60" height="60">
+   <properties>
+    <property name="type" value="range"/>
+   </properties>
+  </object>
+  <object id="168" name="James" type="enemy_spawn" x="120" y="4560" width="60" height="60">
+   <properties>
+    <property name="type" value="range"/>
+   </properties>
+  </object>
+  <object id="169" name="James" type="enemy_spawn" x="720" y="4320" width="60" height="60">
+   <properties>
+    <property name="type" value="range"/>
+   </properties>
+  </object>
+  <object id="170" name="James" type="enemy_spawn" x="120" y="4080" width="60" height="60">
+   <properties>
+    <property name="type" value="range"/>
+   </properties>
+  </object>
+  <object id="171" name="James" type="enemy_spawn" x="720" y="3840" width="60" height="60">
+   <properties>
+    <property name="type" value="range"/>
+   </properties>
+  </object>
+  <object id="172" name="James" type="enemy_spawn" x="120" y="3600" width="60" height="60">
+   <properties>
+    <property name="type" value="range"/>
+   </properties>
+  </object>
+  <object id="173" name="James" type="enemy_spawn" x="720" y="3360" width="60" height="60">
+   <properties>
+    <property name="type" value="range"/>
    </properties>
   </object>
  </objectgroup>
