@@ -726,27 +726,27 @@
   </object>
   <object id="58" type="floor_trap" x="3657.33" y="5578.67" width="60" height="60">
    <properties>
-    <property name="trap" value="cross_boulder 2"/>
+    <property name="trap" value="cross_boulder_2"/>
    </properties>
   </object>
   <object id="174" type="floor_trap" x="3657.33" y="5638.67" width="60" height="60">
    <properties>
-    <property name="trap" value="cross_boulder 4"/>
+    <property name="trap" value="cross_boulder_4"/>
    </properties>
   </object>
   <object id="175" type="floor_trap" x="3597.33" y="5578.67" width="60" height="60">
    <properties>
-    <property name="trap" value="cross_boulder 1"/>
+    <property name="trap" value="cross_boulder_1"/>
    </properties>
   </object>
   <object id="176" type="floor_trap" x="3657.33" y="5518.67" width="60" height="60">
    <properties>
-    <property name="trap" value="cross_boulder 2"/>
+    <property name="trap" value="cross_boulder_2"/>
    </properties>
   </object>
   <object id="177" type="floor_trap" x="3717.33" y="5578.67" width="60" height="60">
    <properties>
-    <property name="trap" value="cross_boulder 3"/>
+    <property name="trap" value="cross_boulder_3"/>
    </properties>
   </object>
   <object id="203" type="floor_trap" x="3717.33" y="2398.67" width="60" height="60">
@@ -986,22 +986,22 @@
     <property name="direction" value="left"/>
    </properties>
   </object>
-  <object id="54" name="cross_boulder 3" type="boulder_trap" x="4076" y="5578" width="60" height="60">
+  <object id="54" name="cross_boulder_3" type="boulder_trap" x="4076" y="5578" width="60" height="60">
    <properties>
     <property name="direction" value="left"/>
    </properties>
   </object>
-  <object id="55" name="cross_boulder 4" type="boulder_trap" x="3656" y="5878" width="60" height="60">
+  <object id="55" name="cross_boulder_4" type="boulder_trap" x="3656" y="5878" width="60" height="60">
    <properties>
     <property name="direction" value="up"/>
    </properties>
   </object>
-  <object id="56" name="cross_boulder 2" type="boulder_trap" x="3656" y="5218" width="60" height="60">
+  <object id="56" name="cross_boulder_2" type="boulder_trap" x="3656" y="5218" width="60" height="60">
    <properties>
     <property name="direction" value="down"/>
    </properties>
   </object>
-  <object id="57" name="cross_boulder 1" type="boulder_trap " x="3236" y="5578" width="60" height="60">
+  <object id="57" name="cross_boulder_1" type="boulder_trap " x="3236" y="5578" width="60" height="60">
    <properties>
     <property name="direction" value="right"/>
    </properties>
