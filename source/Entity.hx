@@ -9,6 +9,7 @@ import flixel.tile.FlxTilemap;
 import flixel.tweens.FlxTween;
 import flixel.tweens.motion.LinearPath;
 import flixel.ui.FlxBar;
+import flixel.util.FlxTimer;
 import haxe.Timer;
 
 class Entity extends FlxSprite
@@ -17,6 +18,7 @@ class Entity extends FlxSprite
 	public var maxHealth:Int;
 	public var level:DungeonLevel;
 	public var invulnerable:Bool;
+	public var bar:FlxBar;
 
 	public function new(X:Float = 0, Y:Float = 0, level:DungeonLevel, speed:Float = 80, maxHealth:Int = 10)
 	{
@@ -28,12 +30,10 @@ class Entity extends FlxSprite
 
 		health = 100;
 
-		maxVelocity.x = speed;
-		maxVelocity.y = speed;
-		drag.x = maxVelocity.x * 4;
-		drag.y = maxVelocity.y * 4;
+		drag.x = speed * 4;
+		drag.y = speed * 4;
 
-		var bar = new FlxBar(0, 0, LEFT_TO_RIGHT, 60, 12);
+		bar = new FlxBar(0, 0, LEFT_TO_RIGHT, 60, 12);
 		bar.percent = 100;
 		bar.setParent(this, "health", true, 0, 0);
 		level.entitiesInfoLayer.add(bar);
@@ -48,13 +48,24 @@ class Entity extends FlxSprite
 			Timer.delay(() -> invulnerable = false, 500);
 		}
 	}
+
+	public function halfHitbox()
+	{
+		height /= 2;
+		offset.y += height;
+		bar.offset.y += height;
+	}
 }
 
 class PlayerEntity extends Entity
 {
+	var dashCooldown:Float = 2;
+	var dashAvailable:Bool = true;
+	var dashSpeed:Float = 500;
+
 	public function new(X:Float = 0, Y:Float = 0, asset:FlxGraphicAsset, level:DungeonLevel)
 	{
-		super(X, Y, level, 80, 10);
+		super(X, Y, level, 160, 10);
 
 		loadGraphic(asset, true, 60, 90);
 
@@ -67,12 +78,41 @@ class PlayerEntity extends Entity
 		animation.add("idle", [for (x in 0...8) x], 10, true);
 
 		animation.play("idle");
+
+		halfHitbox();
 	}
 
 	override function update(elapsed:Float)
 	{
 		updateMovement();
+		handleDash();
 		super.update(elapsed);
+	}
+
+	function handleDash()
+	{
+		if (FlxG.keys.anyPressed([SHIFT]) && dashAvailable)
+		{
+			var newAngle = 0;
+			switch (facing)
+			{
+				case FlxObject.UP:
+					newAngle = -90;
+				case FlxObject.DOWN:
+					newAngle = 90;
+				case FlxObject.LEFT:
+					newAngle = 180;
+				case FlxObject.RIGHT:
+			}
+
+			velocity.set(dashSpeed, 0);
+			velocity.rotate(FlxPoint.weak(0, 0), newAngle);
+			dashAvailable = false;
+			new FlxTimer().start(dashCooldown, function(timer:FlxTimer)
+			{
+				dashAvailable = true;
+			}, 1);
+		}
 	}
 
 	function updateMovement()
@@ -125,8 +165,11 @@ class PlayerEntity extends Entity
 			}
 
 			// determine our velocity based on angle and speed
-			velocity.set(speed, 0);
-			velocity.rotate(FlxPoint.weak(0, 0), newAngle);
+			if (velocity.distanceTo(new FlxPoint(0, 0)) < speed)
+			{
+				velocity.set(speed, 0);
+				velocity.rotate(FlxPoint.weak(0, 0), newAngle);
+			}
 
 			// if the player is moving (velocity is not 0 for either axis), we need to change the animation to match their facing
 			if ((velocity.x != 0 || velocity.y != 0) && touching == FlxObject.NONE)
@@ -157,6 +200,7 @@ enum EnemyMode
 	Idle;
 	MovingTowards(path:FlxPoint, changed:Bool);
 	Attacking;
+	Dead;
 }
 
 class EnemyEntity extends Entity
@@ -190,6 +234,12 @@ class EnemyEntity extends Entity
 	{
 		var myPos = getPosition();
 		var playerPos = level.player.getPosition();
+
+		if (health <= 0)
+		{
+			mode = Dead;
+			return;
+		}
 
 		var distanceToPlayer = myPos.distanceTo(playerPos);
 		FlxG.watch.addQuick("distanceToPlayer", distanceToPlayer);

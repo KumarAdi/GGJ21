@@ -24,7 +24,7 @@ class PlayState extends FlxState
 
 		FlxG.plugins.add(new FlxMouseControl());
 
-		level = new DungeonLevel("assets/tiled/test_map.tmx");
+		level = new DungeonLevel("assets/tiled/working_map.tmx");
 
 		// Add backgrounds
 		add(level.backgroundLayer);
@@ -66,11 +66,11 @@ class PlayState extends FlxState
 			FlxTween.tween(entity, {
 				x: pit.x,
 				y: pit.y
-			}, 0.4);
+			}, 0.39);
 			FlxTween.tween(entity.scale, {
 				x: 0,
 				y: 0
-			}, 0.4);
+			}, 0.4, {onComplete: (_) -> entity.kill()});
 			return false;
 		});
 
@@ -79,11 +79,11 @@ class PlayState extends FlxState
 			FlxTween.tween(entity, {
 				x: pit.x,
 				y: pit.y
-			}, 0.4);
+			}, 0.39);
 			FlxTween.tween(entity.scale, {
 				x: 0,
 				y: 0
-			}, 0.4);
+			}, 0.4, {onComplete: (_) -> entity.kill()});
 			return false;
 		});
 
