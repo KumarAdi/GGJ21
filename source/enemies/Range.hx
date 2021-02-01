@@ -5,6 +5,7 @@ import Entity.EnemyMode;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.math.FlxAngle;
 import flixel.math.FlxPoint;
 import flixel.math.FlxVelocity;
 import flixel.system.FlxAssets.FlxGraphicAsset;
@@ -92,8 +93,11 @@ class RangeEntity extends EnemyEntity
 		{
 			// TODO: play the animation
 			var projectile = new FlxSprite(x, y);
-			projectile.makeGraphic(60, 90, 0xFFFFFFFF);
+			projectile.loadGraphic(AssetPaths.projectile__png, false, 60, 60);
 			FlxVelocity.moveTowardsObject(projectile, level.player, projectileSpeed);
+			projectile.angle = getPosition().angleBetween(level.player.getPosition()) + 90;
+			FlxG.watch.addQuick("Velocity", velocity);
+			FlxG.watch.addQuick("angle", projectile.angle);
 			(cast FlxG.state).projectiles.add(projectile);
 			// level.player.damage(attackDamage);
 			attackCountdown = attackCooldown;
