@@ -8,7 +8,7 @@ import traps.ITrap.TriggerEvent;
 
 class BoulderTrap extends FlxObject implements ITrap
 {
-	private final SPEED = 60;
+	private final SPEED = 180;
 
 	private var level:FlxSpriteGroup;
 	private var direction:FlxPoint;
