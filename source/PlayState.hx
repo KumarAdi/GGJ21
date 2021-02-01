@@ -24,7 +24,7 @@ class PlayState extends FlxState
 
 		FlxG.plugins.add(new FlxMouseControl());
 
-		level = new DungeonLevel("assets/tiled/test_map.tmx");
+		level = new DungeonLevel("assets/tiled/working_map.tmx");
 
 		// Add backgrounds
 		add(level.backgroundLayer);
