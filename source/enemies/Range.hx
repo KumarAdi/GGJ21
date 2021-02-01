@@ -42,6 +42,8 @@ class RangeEntity extends EnemyEntity
 		animation.add("u", [for (x in 10...18) x], 10, false);
 		animation.add("d", [for (x in 10...18) x], 10, false);
 		animation.add("idle", [for (x in 0...8) x], 10, true);
+
+		halfHitbox();
 	}
 
 	override function update(elapsed:Float)
