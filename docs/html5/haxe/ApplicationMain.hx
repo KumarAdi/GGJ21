@@ -32,14 +32,17 @@ class ApplicationMain
 
 		ManifestResources.init(config);
 
-		app.meta["build"] = "75";
+		app.meta["build"] = "81";
 		app.meta["company"] = "HaxeFlixel";
 		app.meta["file"] = "FlxProject";
 		app.meta["name"] = "FlxProject";
 		app.meta["packageName"] = "com.example.myapp";
 		app.meta["version"] = "0.0.1";
 
+		
+
 		#if !flash
+		
 		var attributes:lime.ui.WindowAttributes = {
 			allowHighDPI: false,
 			alwaysOnTop: false,
@@ -47,9 +50,7 @@ class ApplicationMain
 			// display: 0,
 			element: null,
 			frameRate: 60,
-			#if !web
-			fullscreen: false,
-			#end
+			#if !web fullscreen: false, #end
 			height: 0,
 			hidden: #if munit true #else false #end,
 			maximized: false,
@@ -96,13 +97,14 @@ class ApplicationMain
 		}
 
 		app.createWindow(attributes);
+		
 		#elseif !air
 		app.window.context.attributes.background = 0;
 		app.window.frameRate = 60;
 		#end
 
 		var preloader = getPreloader();
-		app.preloader.onProgress.add(function(loaded, total)
+		app.preloader.onProgress.add (function(loaded, total)
 		{
 			@:privateAccess preloader.update(loaded, total);
 		});
@@ -137,8 +139,7 @@ class ApplicationMain
 		#if flash
 		ApplicationMain.getEntryPoint();
 		#else
-		try
-		{
+		try {
 			ApplicationMain.getEntryPoint();
 
 			stage.dispatchEvent(new openfl.events.Event(openfl.events.Event.RESIZE, false, false));
@@ -151,7 +152,7 @@ class ApplicationMain
 		catch (e:Dynamic)
 		{
 			#if !display
-			stage.__handleError(e);
+			stage.__handleError (e);
 			#end
 		}
 		#end
@@ -165,6 +166,7 @@ class ApplicationMain
 		switch (Context.follow(Context.getType("Main")))
 		{
 			case TInst(t, params):
+
 				var type = t.get();
 				for (method in type.statics.get())
 				{
@@ -183,7 +185,7 @@ class ApplicationMain
 				{
 					return macro
 					{
-						var current = stage.getChildAt(0);
+						var current = stage.getChildAt (0);
 
 						if (current == null || !(current is openfl.display.DisplayObjectContainer))
 						{
@@ -200,6 +202,7 @@ class ApplicationMain
 				}
 
 			default:
+
 				Context.fatalError("Main class \"Main\" isn't a class.", Context.currentPos());
 		}
 
@@ -208,11 +211,13 @@ class ApplicationMain
 
 	macro public static function getPreloader()
 	{
+		
 		var type = Context.getType("flixel.system.FlxPreloader");
 
 		switch (type)
 		{
 			case TInst(classType, _):
+
 				var searchTypes = classType.get();
 
 				while (searchTypes != null)
@@ -242,6 +247,7 @@ class ApplicationMain
 		{
 			new openfl.display.Preloader(new flixel.system.FlxPreloader());
 		}
+		
 	}
 
 	#if !macro
@@ -252,33 +258,32 @@ class ApplicationMain
 		#if neko
 		// Copy from https://github.com/HaxeFoundation/haxe/blob/development/std/neko/_std/Sys.hx#L164
 		// since Sys.programPath () isn't available in __init__
-		var sys_program_path =
+		var sys_program_path = {
+			var m = neko.vm.Module.local().name;
+			try
 			{
-				var m = neko.vm.Module.local().name;
-				try
+				sys.FileSystem.fullPath(m);
+			}
+			catch (e:Dynamic)
+			{
+				// maybe the neko module name was supplied without .n extension...
+				if (!StringTools.endsWith(m, ".n"))
 				{
-					sys.FileSystem.fullPath(m);
-				}
-				catch (e:Dynamic)
-				{
-					// maybe the neko module name was supplied without .n extension...
-					if (!StringTools.endsWith(m, ".n"))
+					try
 					{
-						try
-						{
-							sys.FileSystem.fullPath(m + ".n");
-						}
-						catch (e:Dynamic)
-						{
-							m;
-						}
+						sys.FileSystem.fullPath(m + ".n");
 					}
-					else
+					catch (e:Dynamic)
 					{
 						m;
 					}
 				}
-			};
+				else
+				{
+					m;
+				}
+			}
+		};
 
 		var loader = new neko.vm.Loader(untyped $loader);
 		loader.addPath(haxe.io.Path.directory(#if (haxe_ver >= 3.3) sys_program_path #else Sys.executablePath() #end));
@@ -307,30 +312,13 @@ class DocumentClass
 				var fields = Context.getBuildFields();
 
 				var method = macro
-					{
-						current.addChild(this);
-						super();
-						dispatchEvent(new openfl.events.Event(openfl.events.Event.ADDED_TO_STAGE, false, false));
-					}
+				{
+					current.addChild(this);
+					super();
+					dispatchEvent(new openfl.events.Event(openfl.events.Event.ADDED_TO_STAGE, false, false));
+				}
 
-				fields.push({
-					name: "new",
-					access: [APublic],
-					kind: FFun({
-						args: [
-							{
-								name: "current",
-								opt: false,
-								type: macro:openfl.display.DisplayObjectContainer,
-								value: null
-							}
-						],
-						expr: method,
-						params: [],
-						ret: macro:Void
-					}),
-					pos: Context.currentPos()
-				});
+				fields.push({ name: "new", access: [ APublic ], kind: FFun({ args: [ { name: "current", opt: false, type: macro :openfl.display.DisplayObjectContainer, value: null } ], expr: method, params: [], ret: macro :Void }), pos: Context.currentPos() });
 
 				return fields;
 			}
