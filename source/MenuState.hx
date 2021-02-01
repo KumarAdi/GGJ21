@@ -13,10 +13,18 @@ class MenuState extends FlxState
 
 	override public function create()
 	{
+		// add bg
+		var bg = new FlxSprite(0, 0);
+		bg.loadGraphic("assets/images/unknown.png");
+		add(bg);
+		bg.screenCenter();
+		bg.scale.set(2, 2);
+
 		// add play button
 		playButton = new FlxButton(0, 0, "Play", clickPlay);
 		add(playButton);
 		playButton.screenCenter();
+
 		// add title
 		var title = new FlxText(420, 200, 0, "The Trials of Anubis", 80, true);
 		title.setFormat("assets/fonts/history.ttf", 80, 0xFFFFFFFF, "right", FlxTextBorderStyle.SHADOW, 0xFFFF0000);
