@@ -1,6 +1,7 @@
 package;
 
 import flixel.FlxG;
+import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
@@ -9,13 +10,26 @@ import flixel.util.FlxColor;
 class MenuState extends FlxState
 {
 	var playButton:FlxButton;
-	var title:FlxText;
 
 	override public function create()
 	{
+		// add bg
+		var bg = new FlxSprite(0, 0);
+		bg.loadGraphic("assets/images/unknown.png");
+		add(bg);
+		bg.screenCenter();
+		bg.scale.set(2, 2);
+
+		// add play button
 		playButton = new FlxButton(0, 0, "Play", clickPlay);
 		add(playButton);
 		playButton.screenCenter();
+
+		// add title
+		var title = new FlxText(420, 200, 0, "The Trials of Anubis", 80, true);
+		title.setFormat("assets/fonts/history.ttf", 80, 0xFFFFFFFF, "right", FlxTextBorderStyle.SHADOW, 0xFFFF0000);
+		title.borderSize = 8;
+		add(title);
 
 		super.create();
 	}
@@ -27,6 +41,6 @@ class MenuState extends FlxState
 
 	function clickPlay()
 	{
-		FlxG.switchState(new PlayState());
+		FlxG.switchState(new CutsceneState());
 	}
 }
