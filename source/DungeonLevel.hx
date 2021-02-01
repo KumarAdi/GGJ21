@@ -3,7 +3,6 @@ package;
 import Entity.PlayerEntity;
 import enemies.Melee.MeleeEntity;
 import enemies.Range.RangeEntity;
-import enemies.Test.TestEnemy;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.addons.editors.tiled.TiledLayer;
@@ -35,6 +34,7 @@ class DungeonLevel extends TiledMap
 	public var entitiesLayer:FlxSpriteGroup;
 	public var backgroundLayer:FlxGroup;
 	public var boulderLayer:FlxSpriteGroup;
+	public var pitLayer:FlxGroup;
 
 	private var trapMap:Map<String, ITrap>;
 
@@ -54,6 +54,7 @@ class DungeonLevel extends TiledMap
 		entitiesLayer = new FlxSpriteGroup();
 		backgroundLayer = new FlxGroup();
 		boulderLayer = new FlxSpriteGroup();
+		pitLayer = new FlxGroup();
 
 		this.trapMap = new Map();
 		FlxG.camera.setScrollBoundsRect(0, 0, fullWidth, fullHeight, true);
@@ -112,16 +113,18 @@ class DungeonLevel extends TiledMap
 				var trap = new BoulderTrap(x, y, boulderLayer, o.properties.get("direction"));
 				trapsLayer.add(trap);
 				trapMap.set(o.name, trap);
+
 			case "enemy_spawn":
 				switch (o.properties.get("type"))
 				{
 					case "melee":
-						entitiesLayer.add(new MeleeEntity(x, y, AssetPaths.player__png, this));
+						entitiesLayer.add(new MeleeEntity(x, y, this));
 					case "range":
-						entitiesLayer.add(new RangeEntity(x, y, AssetPaths.player__png, this));
-					case "test":
-						// entitiesLayer.add(new TestEnemy(x, y, AssetPaths.player__png, this));
+						entitiesLayer.add(new RangeEntity(x, y, this));
 				}
+			case "pit":
+				var pit = new FlxObject(x, y, o.width, o.height);
+				pitLayer.add(pit);
 		}
 	}
 
