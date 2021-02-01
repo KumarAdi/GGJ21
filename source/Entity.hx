@@ -66,7 +66,7 @@ class PlayerEntity extends Entity
 {
 	public function new(X:Float = 0, Y:Float = 0, asset:FlxGraphicAsset, level:DungeonLevel)
 	{
-		super(X, Y, asset, level, 80, 10);
+		super(X, Y, asset, level, 160, 10);
 	}
 
 	override function update(elapsed:Float)
